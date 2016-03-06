@@ -34,7 +34,7 @@ class GraphAPI(object):
 		return likes
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBAMwiks0cZCfUqX5CsDZC0oZC2tgw9Ajb2GZAwLMPXlJynxX8bgWQoRIigUiCWn0hNv2bvsuVjrqXdwlDrvkbZAVZAYheD78dB6fPcv1iFQ1ZBf1slM92G7UmvHhuKYZBIhdVqCjaQnSbZCUV05aBIo5LnXkXpEyDGietsH5UHu7Do7XPKz9fVtWeZBXwbDnmNlYNH5qzDNuvqI')
+	obj = GraphAPI('CAACEdEose0cBAAgY9jnZAUcfN76S00RjqDvJINAs3z1xu1GUKodNisNaZBHjHZAYMmAhUkW1HPOLn6baNuhF6MbjDZBfj14B6ldeL1spZAraUr37r5AsrWvfjQaxZAZBrTb9eKLlzZCmLHOQXL62szOERqEDOlrMC3ex12LgZAYZAzEeE7ZAZAMkdXUxaKvHrOcKklkywuZBlyh3W5k1jSVLIParT')
 	#r = obj.get_request('me?fields=id,name,music')
 	
 	likes = obj.get_all_likes('me?fields=id,name,music')
