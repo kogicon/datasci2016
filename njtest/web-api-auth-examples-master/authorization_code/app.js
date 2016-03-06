@@ -98,6 +98,25 @@ app.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
+        for (var i = 0; i < body.items.length; i++) {
+
+         console.log(body.items[i]['name']);
+         console.log(body.items[i]['tracks']);
+
+          options.url = body.items[i]['tracks']['href'];
+
+          request.get(options, function(error, response, body) {
+            console.log("GOT TRACKS!!!!");
+            console.log(body);
+
+            for (var i = 0; i < body.items.length; i++) {
+              console.log(body.items[i]['track']);
+            }
+
+          });
+
+
+        }
           console.log(body);
         });
 
