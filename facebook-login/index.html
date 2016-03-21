@@ -12,7 +12,7 @@
   data-show-faces="true">
 </div>
   <h1>MUSIC</h1>
-  <div id="music" style="min-height:200px; background:#00F; width:400px; color:white;">
+  <div id="music" style="min-height:800px; background:#00F; width:800px; color:white;">
   </div>
   <h1>TESTING!!</h1>
 
@@ -113,17 +113,33 @@
       console.log('Successful login for: ' + response.name);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
-      
-      console.log(response);
-      FB.api('/me?fields=id,name,music', function(response) {
-        console.log(response);
+      FB.api('/me?fields=friends{music{likes}}', function(response) {
+        console.log(response.friends.data);
         document.getElementById('music').innerHTML =
         'Here\'s your music likes! <br>';
-        for (var i = 0; i < response.music.data.length; i++) {
-         document.getElementById('music').innerHTML += response.music.data[i]['name'] + '<br>';
+        for (var i = 0; i < response.friends.data.length; i++) {
+         //document.getElementById('music').innerHTML += 'id: ' + response.friends.data[i]['id'] + '<br>';
+         //console.log(response.friends.data[i]['id'])
+         var id = response.friends.data[i]['id']
+         FB.api('/'+response.friends.data[i]['id'], function(response) {
+          console.log(response.name);
+          document.getElementById('music').innerHTML += 'name: ' + response.name + '<br>';
+         });
+         if (response.friends.data[i].hasOwnProperty('music')) {
+          console.log("getting here");
+          console.log(response.friends.data[i]['music']['data'])
+          console.log(response.friends.data[i]['music']['data'].length)
+          for (var j = 0; j < response.friends.data[i]['music']['data'].length; j++) {
+            //document.getElementById('music').innerHTML += 'artist id: ' + response.friends.data[i]['music']['data'][j]['id'] + '<br>';
+            FB.api('/'+response.friends.data[i]['music']['data'][j]['id'], function(response) {
+              console.log(response.name);
+              document.getElementById('music').innerHTML += 'artist name: ' + response.name + " ";
+            });
+          }
+         }
         }
       console.log('Successful music likes request for: ' + response.name);
-      }, {'access_token': 'CAACEdEose0cBABH7hEFwR5djnacZAH5iirRDm0tbJ1GJZBZAZBcZCtoQB6TPbpnfbZBswONT9s4YuXnhSLZBO0IAscCVZBkl6d3lsAnysD83bbojUhWS9An0AgXZCjaz7Wpn4Tvff1H9Kqc0A9PIuiZCo21gsyWSDpwy7qiYZByYQCviIdU1GukZA3c8NMZBO1MN9M4as0kA6QFPwzAZDZD'});
+      }, {'access_token': 'CAACEdEose0cBAGAVQ8yUqK1RjT8JYthJ6jfoT9gQ7ltOMlbygFZAhgkyIdL66vTCxMprGqEPPNCPrxvwwMp8zyNxtniUCEjoX3HhsHUJqrJg0H5xSqFwDmuu0aBv2Bzh2xZCFpB7fUFYZC0fIDsOVOHLd7s5xv5mWzZA77RIExKpODYWtyuLCujuoBdHXXVGgDlL1Ph64QZDZD'});
     });
   }
 </script>
@@ -134,7 +150,7 @@
   the FB.login() function when clicked.
 -->
 
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+<fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">
