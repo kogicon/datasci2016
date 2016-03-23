@@ -22,30 +22,30 @@ class GraphAPI(object):
 			r = r.json()
 			currentlikes =  [song['name'] for song in r['data']]
 			likes += currentlikes
-			while r['paging']['next']:
-				r = requests.get(r['paging']['next'])
-				r = r.json()
-				currentlikes =  [song['name'] for song in r['data']]
-				likes += currentlikes
-				if 'next' in r['paging']:
-					nextpage = r['paging']['next']
-				else:
-					break
+			# # while r['paging']['next']:
+			# 	r = requests.get(r['paging']['next'])
+			# 	r = r.json()
+			# 	currentlikes =  [song['name'] for song in r['data']]
+			# 	likes += currentlikes
+			# 	if 'next' in r['paging']:
+			# 		nextpage = r['paging']['next']
+			# 	else:
+			# 		break
 
 		return likes
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBANUDtsL6JOFQ58xDcrWz2LTkCpQ2TLbNh069XBwuzD1ZBujmYbnmtLMfJN7byvzl9NZBkGoI37G8B0aZAQ3qnL6GsXya08iuj44kmVuao4WYOJnU0pYf0BPVgxZBMiERd7c7uKI3P6Qzecg5rbYPlt3VGfxUiZAiEZBYvaZAYZCiQR55YaLF6oVPRzHqDATSJ5mRr4P5YrZAq')
+	obj = GraphAPI('CAACEdEose0cBABZAcgQZC2D59PUjvrmUG0JWWHYmjtZAPIzfumNthZAYRzkwWOIHEKxyZAboQuBZCSwKOKJvXRBDDF1xEy6VkltroiOyUWT538xEugYK27KfO3gyrstZAkXIL8VNfZC7T76VdiHtAdRt0OLh5eXvR5zKahzEHMY50f2tQXtde6jUkdEW6RlPlwCHpgZBhu1oaigZDZD')
 	#r = obj.get_request('me?fields=id,name,music')
 	
 	likes = obj.get_all_likes('me?fields=id,name,music')
 	#print likes
-	print len(likes)
-	with open('elbertlikes.csv', 'wb') as f:
-		writer = csv.writer(f)
+	print (len(likes))
+	with open('emilylikes.csv', 'wt') as f:
+		writer = csv.writer(f, lineterminator='\n')
 		writer.writerow(["artists"])
 		for i in range(len(likes)):
-			like = likes[i].encode("utf-8")
+			like = likes[i]
 			writer.writerow([like])
 
 
