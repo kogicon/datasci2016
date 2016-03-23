@@ -49,9 +49,9 @@ class GraphAPI(object):
 
 def main():
 
-	obj = GraphAPI('CAACEdEose0cBAFnyrCP1UoFcaGw4tIsdTPGC957SzmoJrLZBZAZAZCScZBiGv7e1wYV9r0hCEMQ3OesmNN4l2gcP5kyZBIA3g7ajl3ZAwQQM6TX6ZCVPjPpAcxAQzWrZCZAZAVgOCTNlvJQGFSpivVFZCbqcN1jpmOKjOLco2my1QGG5IZAC6ZBZBilfyKZBKF3kbZA6MwMvbosSerZAsKOx9h8QQwX8GV')	
+	obj = GraphAPI('CAACEdEose0cBANZAIjtwvZAZAH9GO6ZCriKxMerT0zRehmAmjXGA46PNC8cHXmO5R1fZAnhnrSvQ1baq6esCKx0CuOCc1fXyGhQrpZAglfxlMiLIAZCgvivMbEy7OKJ6nYrTOgqRie80IGDY7hJLLUJfneHuRBjZA0l1pr1YLrX8qB5bZAZAWxSH5qMsz7QnN4daOpt5YGxb0aUl6lkkpM3ZBro')	
 	popularity = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=music{likes}')
-	with open('mattlikes.csv', 'wb') as f:
+	with open('noahlikes.csv', 'wb') as f:
 
 		writer = csv.writer(f)
 		writer.writerow(["artists", "num_likes"])
