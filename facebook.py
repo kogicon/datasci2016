@@ -23,34 +23,35 @@ class GraphAPI(object):
 			num_likes = info['likes']
 			likes.append(name)
 			popularity[name] = num_likes
-		if r['music']['paging']['next']:
-			r = requests.get(r['music']['paging']['next'])
-			r = r.json()
-			for song in r['data']:
-				name = self.get_request('https://graph.facebook.com/v2.5/'+song['id'])['name']
-				num_likes = song['likes']
-				likes.append(name)
-				popularity[name] = num_likes
-			while r['paging']['next']:
-				r = requests.get(r['paging']['next'])
+		if 'next' in r['music']['paging']:
+			if r['music']['paging']['next']:
+				r = requests.get(r['music']['paging']['next'])
 				r = r.json()
 				for song in r['data']:
 					name = self.get_request('https://graph.facebook.com/v2.5/'+song['id'])['name']
 					num_likes = song['likes']
 					likes.append(name)
 					popularity[name] = num_likes
-				if 'next' in r['paging']:
-					nextpage = r['paging']['next']
-				else:
-					break
+				while r['paging']['next']:
+					r = requests.get(r['paging']['next'])
+					r = r.json()
+					for song in r['data']:
+						name = self.get_request('https://graph.facebook.com/v2.5/'+song['id'])['name']
+						num_likes = song['likes']
+						likes.append(name)
+						popularity[name] = num_likes
+					if 'next' in r['paging']:
+						nextpage = r['paging']['next']
+					else:
+						break
 
 		return popularity
 
 def main():
 
-	obj = GraphAPI('CAACEdEose0cBAMDWqAor9pwj90dvqAk5GzFfyMUU0Dfd66HQc0cm4JM2ZCQIobFpH3q18GFAkNNO5APsqDXSZCkjv18vPLJVDpwIQwoezZCgX4hf5kakRwOOFIhpjmYt74ZBNwcCe18Hlx50YCVpNhPywAzkGMtXcJCNzdxHsUaIlEG5jKLvzTRqMXAGS4nSwt6JEbOHBh6583bMXuJc')	
+	obj = GraphAPI('CAACEdEose0cBAFnyrCP1UoFcaGw4tIsdTPGC957SzmoJrLZBZAZAZCScZBiGv7e1wYV9r0hCEMQ3OesmNN4l2gcP5kyZBIA3g7ajl3ZAwQQM6TX6ZCVPjPpAcxAQzWrZCZAZAVgOCTNlvJQGFSpivVFZCbqcN1jpmOKjOLco2my1QGG5IZAC6ZBZBilfyKZBKF3kbZA6MwMvbosSerZAsKOx9h8QQwX8GV')	
 	popularity = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=music{likes}')
-	with open('elbertlikes.csv', 'wb') as f:
+	with open('mattlikes.csv', 'wb') as f:
 
 		writer = csv.writer(f)
 		writer.writerow(["artists", "num_likes"])
