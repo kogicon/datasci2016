@@ -35,13 +35,13 @@ class GraphAPI(object):
 		return likes
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBANUDtsL6JOFQ58xDcrWz2LTkCpQ2TLbNh069XBwuzD1ZBujmYbnmtLMfJN7byvzl9NZBkGoI37G8B0aZAQ3qnL6GsXya08iuj44kmVuao4WYOJnU0pYf0BPVgxZBMiERd7c7uKI3P6Qzecg5rbYPlt3VGfxUiZAiEZBYvaZAYZCiQR55YaLF6oVPRzHqDATSJ5mRr4P5YrZAq')
+	obj = GraphAPI('CAACEdEose0cBAEm0sWaJeObCFkbYucIto0GeQ8EPXyGdJdXCn0ZB14iDt1t9H7DmHynXJu11JZAgS7Xy3NOomuh92I1OgBVtg9lZBcZATXAti7BcdcZCRm0X5IEv7Mn0q6v9F74SOZBJPco4zPOTTH0iYM7MaeXrKBuC9SBpv9cR23RgZCJZB8ZCFHXZCnwqyXxszHsHx66rpfa2WfypBSuJOJ')
 	#r = obj.get_request('me?fields=id,name,music')
 	
 	likes = obj.get_all_likes('me?fields=id,name,music')
 	#print likes
 	print len(likes)
-	with open('elbertlikes.csv', 'wb') as f:
+	with open('noahlikes.csv', 'wb') as f:
 		writer = csv.writer(f)
 		writer.writerow(["artists"])
 		for i in range(len(likes)):
@@ -51,3 +51,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
