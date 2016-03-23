@@ -47,9 +47,11 @@ class GraphAPI(object):
 		return popularity
 
 def main():
+
 	obj = GraphAPI('CAACEdEose0cBAMDWqAor9pwj90dvqAk5GzFfyMUU0Dfd66HQc0cm4JM2ZCQIobFpH3q18GFAkNNO5APsqDXSZCkjv18vPLJVDpwIQwoezZCgX4hf5kakRwOOFIhpjmYt74ZBNwcCe18Hlx50YCVpNhPywAzkGMtXcJCNzdxHsUaIlEG5jKLvzTRqMXAGS4nSwt6JEbOHBh6583bMXuJc')	
 	popularity = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=music{likes}')
 	with open('elbertlikes.csv', 'wb') as f:
+
 		writer = csv.writer(f)
 		writer.writerow(["artists", "num_likes"])
 		for key, value in popularity.iteritems():
@@ -63,3 +65,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
