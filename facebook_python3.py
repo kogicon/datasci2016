@@ -1,52 +1,65 @@
 import json
 import requests
 import csv
+from collections import defaultdict
 
-class GraphAPI(object):
-	prefix_url = 'https://graph.facebook.com/v2.5/'
-	
+class GraphAPI(object):	
 	def __init__(self, access_token):
 		self.access_token = access_token
 
 	def get_request(self, path, params={}):
 		params['access_token'] = self.access_token
-		url = self.prefix_url + path
+		url = path
 		r = requests.get(url, params=params)
 		return r.json()
 	def get_all_likes(self, board):
+		popularity = defaultdict(int)
 		r = self.get_request(board)
-		likes = [info['name'] for info in r['music']['data']]
-		#print likes
-		if r['music']['paging']['next']:
-			r = requests.get(r['music']['paging']['next'])
-			r = r.json()
-			currentlikes =  [song['name'] for song in r['data']]
-			likes += currentlikes
-			# # while r['paging']['next']:
-			# 	r = requests.get(r['paging']['next'])
-			# 	r = r.json()
-			# 	currentlikes =  [song['name'] for song in r['data']]
-			# 	likes += currentlikes
-			# 	if 'next' in r['paging']:
-			# 		nextpage = r['paging']['next']
-			# 	else:
-			# 		break
+		# print(r)
+		likes=[]
+		for info in r['music']['data']:
+			name = self.get_request('https://graph.facebook.com/v2.5/'+info['id'])['name']
+			num_likes = info['likes']
+			likes.append(name)
+			popularity[name] = num_likes
+		if 'next' in r['music']['paging']:
+			if r['music']['paging']['next']:
+				r = requests.get(r['music']['paging']['next'])
+				r = r.json()
+				for song in r['data']:
+					name = self.get_request('https://graph.facebook.com/v2.5/'+song['id'])['name']
+					num_likes = song['likes']
+					likes.append(name)
+					popularity[name] = num_likes
+				while r['paging']['next']:
+					r = requests.get(r['paging']['next'])
+					r = r.json()
+					for song in r['data']:
+						name = self.get_request('https://graph.facebook.com/v2.5/'+song['id'])['name']
+						num_likes = song['likes']
+						likes.append(name)
+						popularity[name] = num_likes
+					if 'next' in r['paging']:
+						nextpage = r['paging']['next']
+					else:
+						break
 
-		return likes
+		return popularity
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBABZAcgQZC2D59PUjvrmUG0JWWHYmjtZAPIzfumNthZAYRzkwWOIHEKxyZAboQuBZCSwKOKJvXRBDDF1xEy6VkltroiOyUWT538xEugYK27KfO3gyrstZAkXIL8VNfZC7T76VdiHtAdRt0OLh5eXvR5zKahzEHMY50f2tQXtde6jUkdEW6RlPlwCHpgZBhu1oaigZDZD')
-	#r = obj.get_request('me?fields=id,name,music')
+	obj = GraphAPI('CAACEdEose0cBANtn2EyLyoemLEh0meuqXLXdGCytk31N375L1LdFZBtZBBea5NNRqHZA9ZBfMDDwUEAZBw4x6mmxZAtKGFPRBHgo84sTp5OrTjWxBEBnoVrBRTS8wOspZBunoHW0kjKqINEVnKuLoRir3DqyznXGATRUNR62QPuVOOQna8coQiZAw5Mv9LqmX2qAZCrVtCSR5dwZDZD')
 	
-	likes = obj.get_all_likes('me?fields=id,name,music')
-	#print likes
-	print (len(likes))
+	popularity = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=music{likes}')
 	with open('emilylikes.csv', 'wt') as f:
 		writer = csv.writer(f, lineterminator='\n')
-		writer.writerow(["artists"])
-		for i in range(len(likes)):
-			like = likes[i]
-			writer.writerow([like])
+		writer.writerow(["artists", "num_likes"])
+		for key, value in popularity.items():
+			like = key
+			pop = value
+			to_write = []
+			to_write.append(like)
+			to_write.append(pop)
+			writer.writerow(to_write)
 
 
 if __name__ == '__main__':
