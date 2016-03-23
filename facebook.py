@@ -1,5 +1,6 @@
 import json
 import requests
+import csv
 
 class GraphAPI(object):
 	prefix_url = 'https://graph.facebook.com/v2.5/'
@@ -34,11 +35,19 @@ class GraphAPI(object):
 		return likes
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBAAgY9jnZAUcfN76S00RjqDvJINAs3z1xu1GUKodNisNaZBHjHZAYMmAhUkW1HPOLn6baNuhF6MbjDZBfj14B6ldeL1spZAraUr37r5AsrWvfjQaxZAZBrTb9eKLlzZCmLHOQXL62szOERqEDOlrMC3ex12LgZAYZAzEeE7ZAZAMkdXUxaKvHrOcKklkywuZBlyh3W5k1jSVLIParT')
+	obj = GraphAPI('CAACEdEose0cBANUDtsL6JOFQ58xDcrWz2LTkCpQ2TLbNh069XBwuzD1ZBujmYbnmtLMfJN7byvzl9NZBkGoI37G8B0aZAQ3qnL6GsXya08iuj44kmVuao4WYOJnU0pYf0BPVgxZBMiERd7c7uKI3P6Qzecg5rbYPlt3VGfxUiZAiEZBYvaZAYZCiQR55YaLF6oVPRzHqDATSJ5mRr4P5YrZAq')
 	#r = obj.get_request('me?fields=id,name,music')
 	
 	likes = obj.get_all_likes('me?fields=id,name,music')
-	print likes
+	#print likes
+	print len(likes)
+	with open('elbertlikes.csv', 'wb') as f:
+		writer = csv.writer(f)
+		writer.writerow(["artists"])
+		for i in range(len(likes)):
+			like = likes[i].encode("utf-8")
+			writer.writerow([like])
+
 
 if __name__ == '__main__':
     main()
