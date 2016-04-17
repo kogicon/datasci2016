@@ -11,6 +11,9 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var $ = require('jquery');
+var q = require('q');
+var http = require("q-io/http");
 
 var client_id = 'b925b49f463c4a759b1a72289ab69f8c'; // Your client id
 var client_secret = '95fc004b1d3e4eddb61c0a752e4ae6da'; // Your client secret
@@ -144,35 +147,45 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   console.log(access_token);
 
+
+
   var options = {
     url: 'https://api.spotify.com/v1/me/top/artists',
+    type: 'GET',
     headers: { 'Authorization': 'Bearer ' + access_token },
     json: true
   };
 
-  request.get(options, function(error, response, body) {
-    console.log(response.statusCode);
-    if (!error && response.statusCode === 200) {
-      console.log(body);
-      console.log("All done!");
-      res.send({
-        'items': body.items
-      });
-      while (body.next && body.href != 'https://api.spotify.com/v1/me/top/artists') {
-        console.log("infinite loop");
-        options['url'] = body.next;
-        request.get(options, function(error, response, body) {
-          console.log(body);
-          console.log("All done!");
-          console.log('next page thing: ' + body.next);
-          res.send({
-            'items': body.items
-          });
-        });
+  var topArtistList = [];
 
+  function getTopArtists(options) {    
+    var topArtistsPromise = http.request(options);
+    console.log(topArtistsPromise);
+
+    topArtistsPromise.done(function (result) {
+      var artists = result.items;
+      for (artist in artists) {
+        topArtistList.push(artist);
       }
-    }
-  });
+      if (result.next && result.href != 'https://api.spotify.com/v1/me/top/artists') {
+        options['url'] = result.next;
+        return getTopArtists(options);
+      } else {
+        return null;
+      }
+    });
+
+    return topArtistsPromise;
+  }
+
+  var topArtistsPromise = getTopArtists(options);
+
+  topArtistsPromise.done(function (result) {
+    console.log(result);
+    res.send({
+      'items': topArtistList
+    });
+  }); 
 });
 
 
