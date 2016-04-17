@@ -158,6 +158,18 @@ app.get('/get_basic_recommendations', function(req, res) {
       res.send({
         'items': body.items
       });
+      while (body.next) {
+        options['url'] = body.next;
+        request.get(options, function(error, response, body) {
+          console.log(body);
+          console.log("All done!");
+          console.log('next: ' + next);
+          res.send({
+            'items': body.items
+          });
+        });
+
+      }
     }
   });
 });
