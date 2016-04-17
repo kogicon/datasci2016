@@ -52,10 +52,6 @@ class GraphAPI(object):
 
 def main():
 	obj = GraphAPI('CAACEdEose0cBADRochgZBykmwXGZBam2qSLBFydCnoa4IzD0sOgshX11Sj6oMct4yq3NSNToBvXlHPjKNWPFsl6RvZCPjXnqRoZAxtQ4d7HhwZBrKoyZAx0j98DBZA8OlUTh36DnjJERl9vQd3GZADZCYLjCK47078rghbv2QVKo5NETMa9l7N0R2KZA1ZAeM9FXhQZAGjiAOz7VII9l8oTpsSB7')
-	#r = obj.get_request('me?fields=id,name,music')
-	
-	#likes = obj.get_all_likes('me?fields=id,name,friends{music{likes}}')
-	#print likes
 	friendslikes = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=id,name,friends{music{likes}}')
 	with open('elbertsfriendslikes.csv', 'wb') as f:
 		writer = csv.writer(f)
