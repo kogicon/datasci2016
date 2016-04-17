@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+
+</style>
+</head>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+persontobands = {}
+d3.csv("elbertsfriendslikes.csv", function(data) {
+	for (var i = 0; i < data.length; i++) {
+		name = data[i]['name']
+		artist = data[i]['artists']
+		if (!persontobands.hasOwnProperty(name)) {
+			list = []
+			list.push(artist)
+			persontobands[name] = list
+		}
+		else {
+			list = persontobands[name]
+			list.push(artist)
+			persontobands[name] = list
+		}
+	}
+	//console.log(persontobands);
+});
+d3.csv("elbertlikes.csv", function(data) {
+	list = []
+	for (var i = 0; i < data.length; i++) {
+		//console.log(data[i])
+		list.push(data[i]['artists'])
+	}
+	persontobands["Elbert"] = list
+});
+d3.csv("emilylikes.csv", function(data) {
+	list = []
+	for (var i = 0; i < data.length; i++) {
+		list.push(data[i]['artists'])
+	}
+	persontobands["Emily"] = list
+	console.log(persontobands);
+	noahlength = persontobands["Noah Picard"].length;
+	mattlength = persontobands["Matt McAvoy"].length;
+	natelength = persontobands["Nate Parrott"].length;
+	elbertlength = persontobands["Elbert"].length;
+	jeremylength = persontobands["Jeremy Joachim"].length;
+	
+});
+//console.log(persontobands)
+//lengthA = persontobands["Noah Picard"]
+//console.log(lengthA)
+
+</script>
+</body>
+</html>
