@@ -160,9 +160,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   function getTopArtists(options) {    
     var topArtistsPromise = http.request(options);
-    console.log(topArtistsPromise);
+    //console.log(topArtistsPromise);
 
     topArtistsPromise.done(function (result) {
+      //topArtistList.push("thing");
+      console.log("printing result");
+      console.log(result);
       var artists = result.items;
       for (artist in artists) {
         topArtistList.push(artist);
@@ -180,12 +183,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   var topArtistsPromise = getTopArtists(options);
 
-  topArtistsPromise.done(function (result) {
-    console.log(result);
+  /*topArtistsPromise.done(function (result) {
+    //console.log(result);
     res.send({
       'items': topArtistList
     });
-  }); 
+  }); */
 });
 
 
