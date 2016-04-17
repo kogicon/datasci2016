@@ -51,13 +51,13 @@ class GraphAPI(object):
 		
 
 def main():
-	obj = GraphAPI('CAACEdEose0cBADRochgZBykmwXGZBam2qSLBFydCnoa4IzD0sOgshX11Sj6oMct4yq3NSNToBvXlHPjKNWPFsl6RvZCPjXnqRoZAxtQ4d7HhwZBrKoyZAx0j98DBZA8OlUTh36DnjJERl9vQd3GZADZCYLjCK47078rghbv2QVKo5NETMa9l7N0R2KZA1ZAeM9FXhQZAGjiAOz7VII9l8oTpsSB7')
+	obj = GraphAPI('CAACEdEose0cBANZAIjtwvZAZAH9GO6ZCriKxMerT0zRehmAmjXGA46PNC8cHXmO5R1fZAnhnrSvQ1baq6esCKx0CuOCc1fXyGhQrpZAglfxlMiLIAZCgvivMbEy7OKJ6nYrTOgqRie80IGDY7hJLLUJfneHuRBjZA0l1pr1YLrX8qB5bZAZAWxSH5qMsz7QnN4daOpt5YGxb0aUl6lkkpM3ZBro')
 	#r = obj.get_request('me?fields=id,name,music')
 	
 	#likes = obj.get_all_likes('me?fields=id,name,friends{music{likes}}')
 	#print likes
 	friendslikes = obj.get_all_likes('https://graph.facebook.com/v2.5/me?fields=id,name,friends{music{likes}}')
-	with open('elbertsfriendslikes.csv', 'wb') as f:
+	with open('noahsfriendslikes.csv', 'wb') as f:
 		writer = csv.writer(f)
 		writer.writerow(["name", "artists", "num_likes"])
 		for key, value in friendslikes.iteritems():
