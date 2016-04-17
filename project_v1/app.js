@@ -12,8 +12,8 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = '03ffe0cac0a0401aa6673c3cf6d02ced'; // Your client id
-var client_secret = 'a57c43efb9644574a96d6623fb8bfbc2'; // Your client secret
+var client_id = 'b925b49f463c4a759b1a72289ab69f8c'; // Your client id
+var client_secret = '95fc004b1d3e4eddb61c0a752e4ae6da'; // Your client secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 /**
@@ -44,7 +44,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-top-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -97,17 +97,17 @@ app.get('/callback', function(req, res) {
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
+        /*request.get(options, function(error, response, body) {
         for (var i = 0; i < body.items.length; i++) {
 
-         console.log(body.items[i]['name']);
-         console.log(body.items[i]['tracks']);
+         //console.log(body.items[i]['name']);
+         //console.log(body.items[i]['tracks']);
 
           options.url = body.items[i]['tracks']['href'];
 
           request.get(options, function(error, response, body) {
-            console.log("GOT TRACKS!!!!");
-            console.log(body);
+            //console.log("GOT TRACKS!!!!");
+            //console.log(body);
 
             for (var i = 0; i < body.items.length; i++) {
               console.log(body.items[i]['track']);
@@ -118,7 +118,7 @@ app.get('/callback', function(req, res) {
 
         }
           console.log(body);
-        });
+        });*/
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -135,6 +135,33 @@ app.get('/callback', function(req, res) {
     });
   }
 });
+
+app.get('/get_basic_recommendations', function(req, res) {
+
+  console.log("getting basic recs");
+
+  var access_token = req.query.access_token;
+
+  console.log(access_token);
+
+  var options = {
+    url: 'https://api.spotify.com/v1/me/top/artists',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+
+  request.get(options, function(error, response, body) {
+    console.log(response.statusCode);
+    if (!error && response.statusCode === 200) {
+      console.log(body);
+      console.log("All done!");
+      res.send({
+        'items': body.items
+      });
+    }
+  });
+});
+
 
 app.get('/refresh_token', function(req, res) {
 

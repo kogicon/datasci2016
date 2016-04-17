@@ -113,5 +113,24 @@ Aquires Login tokens from spotify and gets data
         });
       });
     }, false);
+
+    document.getElementById('get-basic-recommendations').addEventListener('click', function() {
+      $.ajax({
+        url: '/get_basic_recommendations',
+        data: {
+          'access_token': access_token
+        }
+      }).done(function(data) {
+        top_artists = data.items;
+        console.log(top_artists);
+        console.log("Nice!");
+        /*oauthPlaceholder.innerHTML = oauthTemplate({
+          access_token: access_token,
+          refresh_token: refresh_token
+        });*/
+      });
+    }, false);
+
+
   }
 })();

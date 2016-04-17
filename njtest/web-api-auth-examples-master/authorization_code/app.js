@@ -97,17 +97,17 @@ app.get('/callback', function(req, res) {
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
+        /*request.get(options, function(error, response, body) {
         for (var i = 0; i < body.items.length; i++) {
 
-         console.log(body.items[i]['name']);
-         console.log(body.items[i]['tracks']);
+         //console.log(body.items[i]['name']);
+         //console.log(body.items[i]['tracks']);
 
           options.url = body.items[i]['tracks']['href'];
 
           request.get(options, function(error, response, body) {
-            console.log("GOT TRACKS!!!!");
-            console.log(body);
+            //console.log("GOT TRACKS!!!!");
+            //console.log(body);
 
             for (var i = 0; i < body.items.length; i++) {
               console.log(body.items[i]['track']);
@@ -118,7 +118,7 @@ app.get('/callback', function(req, res) {
 
         }
           console.log(body);
-        });
+        });*/
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -138,24 +138,24 @@ app.get('/callback', function(req, res) {
 
 app.get('/get_basic_recommendations', function(req, res) {
 
+  console.log("getting basic recs");
+
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
   var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
+    url: 'https://api.spotify.com/v1/me/top/artists',
     headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
     json: true
   };
 
-  request.post(authOptions, function(error, response, body) {
+  request.get(authOptions, function(error, response, body) {
+    console.log(response);
     if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.send({
+      console.log(body);
+      console.log("All done!");
+      /*res.send({
         'access_token': access_token
-      });
+      });*/
     }
   });
 });
