@@ -227,16 +227,18 @@ app.get('/get_basic_recommendations', function(req, res) {
       console.log("okay");
       console.log(result);
       console.log("hm");
-      topArtistList.push("bro");
       var artists = result.items;
       for (artist in artists) {
         topArtistList.push(artist);
       }
-      if (result.next && result.href != 'https://api.spotify.com/v1/me/top/artists') {
+      if (result.next) {
         options['url'] = result.next;
         return getTopArtists(options);
       } else {
-        return null;
+        console.log(topArtistList);
+        res.send({
+          'items': topArtistList
+        });
       }
     });
 
