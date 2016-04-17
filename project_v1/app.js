@@ -219,9 +219,9 @@ app.get('/get_basic_recommendations', function(req, res) {
     });
 
     return topArtistsPromise;*/
-  }
+  
 
-  var topArtistsPromise = getTopArtists(options);
+  //var topArtistsPromise = getTopArtists(options);
 
   /*topArtistsPromise.done(function (result) {
     //console.log(result);
