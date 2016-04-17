@@ -158,12 +158,13 @@ app.get('/get_basic_recommendations', function(req, res) {
       res.send({
         'items': body.items
       });
-      while (body.next) {
+      while (body.next && body.href != 'https://api.spotify.com/v1/me/top/artists') {
+        console.log("infinite loop");
         options['url'] = body.next;
         request.get(options, function(error, response, body) {
           console.log(body);
           console.log("All done!");
-          console.log('next: ' + next);
+          console.log('next page thing: ' + body.next);
           res.send({
             'items': body.items
           });
