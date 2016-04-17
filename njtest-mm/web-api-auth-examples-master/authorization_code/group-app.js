@@ -138,6 +138,9 @@ app.get('/callback', function(req, res) {
                   json: true
                 };
 
+                // array for artists
+                artist_array = []
+
                 // use the access token to access the Spotify Web API. Looks at this users artists
                 request.get(options_artist, function(error, response, body) {
                   //console.log(body);
@@ -147,6 +150,7 @@ app.get('/callback', function(req, res) {
                   body['artists'].items.forEach(function(item) {
                     //console.log(item);
                     //console.log('popularity of ' + item.name + ' is ' + item.popularity);
+                    artist_array.push(item.id)
                     popular_array.push(item.popularity)
                   });
 
@@ -162,9 +166,10 @@ app.get('/callback', function(req, res) {
               console.log("task 2");
               callback(null, 2);
 
+              for (var i = 0; i < artist_array.length; i++) {
                 // Gets information on artist Utada Hikaru and puts average popularity in friend_popularity array
                 var options_artist_utada = {
-                    url: 'https://api.spotify.com/v1/artists/7lbSsjYACZHn1MSDXPxNF2/related-artists',
+                    url: 'https://api.spotify.com/v1/artists/'+artist_array[i]+'/related-artists',
                     headers: { 'Authorization': 'Bearer ' + access_token },
                     json: true
                   };
@@ -174,7 +179,7 @@ app.get('/callback', function(req, res) {
                     //console.log(body)
                     body['artists'].forEach(function(item) {
                       //console.log(item);
-                      //console.log('popularity of ' + item.name + ' is ' + item.popularity);
+                      console.log('popularity of ' + item.name + ' is ' + item.popularity);
                       utada_artists.push(item.popularity)
                       });
 
@@ -182,6 +187,7 @@ app.get('/callback', function(req, res) {
                       var mean = d3.mean(utada_artists);
                       friend_popularity.push(mean);
                       console.log("average popularity of Utada is: " + mean);
+                    };
                   });
             }, 500);
           },
