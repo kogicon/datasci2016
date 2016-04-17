@@ -25,7 +25,6 @@ var client_id = '93ba9aeed2e94c22a2c9a7cb4aff6fa8'; // Your client id
 var client_secret = '7b4ccf4a65e445e4b4aeb25f84c7b195'; // Your client secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -112,14 +111,9 @@ app.get('/callback', function(req, res) {
           //console.log('country and name: ' + body['country'] + ', ' + body['display_name'])
         });
 
-        // Begin my code ----------------------------------------
-        var async = require("async");
-        var get_artists = require("./get_artists");
 
         var collector = [];
         var popular_array = [];
-        var utada_artists = [];
-        var popular_artists = [];
         var friend_popularity = ["value"];
 
         var options_three = {
@@ -128,71 +122,80 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
+        // use the access token to access the Spotify Web API
+        request.get(options_three, function(error, response, body) {
+          //console.log(body);
 
-        var eg2 = '';
-
-        // Use the async module to perform each callback sequentally
-        async.series([
-          function(callback) {
-            setTimeout(function() {
-              console.log("task 1"); // Task 1 takes my login, filters on artists, and takes popularity from each artist. Then a user's popularity is based on the average popularity of their artists
-              callback(null, 1);
-                var options_artist = {
-                  url: 'https://api.spotify.com/v1/me/following?limit=20&type=artist',
-                  headers: { 'Authorization': 'Bearer ' + access_token },
-                  json: true
-                };
-
-                // use the access token to access the Spotify Web API. Looks at this users artists
-                request.get(options_artist, function(error, response, body) {
-                  //console.log(body);
-                  //console.log(body['artists'].total);
-                  
-                  // Prints to console the artist and popularity of artist the user is following
-                  body['artists'].items.forEach(function(item) {
-                    //console.log(item);
-                    //console.log('popularity of ' + item.name + ' is ' + item.popularity);
-                    popular_array.push(item.popularity)
-                  });
-
-                  popular_array = popular_array.sort();
-                  var mean = d3.mean(popular_array);
-                  friend_popularity.push(mean);
-                  console.log("mean of your popular artists: " + mean);
-            });
-            }, 600);
-          },
-          function(callback) {
-            setTimeout(function() {
-
-              callback(null, 2);
-              utada_id = '7lbSsjYACZHn1MSDXPxNF2';
-
-
-
-              //calls call_artist function with id and returns all the information from the call
-              var eg2 = get_artists.call_artist(utada_id, access_token);
-              
-            }, 200);
-          },
-          function(callback) {
-            setTimeout(function() {
-              callback(null, 3);
-
-              console.log("console log2:" + eg2 + ". ");
-
-            }, 100);
-          }
-        ], function(error, results) {
-          console.log(results);
+          // puts the id of artists in a playlist into an array, then iterates through array and prints it to the console
+          body['items'].forEach(function(item) {
+            //console.log(item.id)
+            //console.log(item.name)
+            collector.push(item.id);
+          })
+/*
+          for( var i = 0; i < collector.length; i++) {
+            console.log('collector item ' + collector[i])
+          }*/
         });
+
+        var margin = {top: 20, right: 20, bottom: 70, left: 40},
+          width = 600 - margin.left - margin.right,
+          height = 300 - margin.top - margin.bottom;
+/*
+        var svg = d3.select("body").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+
+          svg.select("mean")
+            .append("text")
+            .text("anything")*/
+
+        var options_artist = {
+          url: 'https://api.spotify.com/v1/me/following?limit=20&type=artist',
+          headers: { 'Authorization': 'Bearer ' + access_token },
+          json: true
+        };
+
+        // use the access token to access the Spotify Web API. Looks at this users artists
+        request.get(options_artist, function(error, response, body) {
+          //console.log(body);
+          console.log(body['artists'].total);
           
+          // Prints to console the artist and popularity of artist the user is following
+          body['artists'].items.forEach(function(item) {
+            console.log('popularity of ' + item.name + ' is ' + item.popularity);
+            popular_array.push(item.popularity)
+          })
 
-      // End my code ----------------------------------------
+          popular_array = popular_array.sort();
+          var mean = d3.mean(popular_array);
+          friend_popularity.push(mean);
+          friend_popularity.push(68);
+          console.log("mean of your popular artists: " + mean);
 
-      
-        // need to work on getting other peoples following artist and correctly run the for csv 
-        // Eg Noah's Spotify id is: 1234392786
+
+          //clears file
+          fs.unlink('public/data.csv');
+          
+           for (var i = 0; i < friend_popularity.length; i++) {
+  
+          fs.appendFile('public/data.csv', friend_popularity[i]+'\n', 'utf8', function (err) {
+            if (err) { console.log('some error occured');
+          } else {
+            console.log('it\s saved');
+          }
+        });
+      }
+        
+
+
+        });
+
+        //next is to put user, artist and popularity into list, then list into csv file
+
 
 
 
