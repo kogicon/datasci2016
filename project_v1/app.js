@@ -11,9 +11,7 @@ var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-var $ = require('jquery');
-var q = require('q');
-var http = require("q-io/http");
+
 
 var client_id = 'b925b49f463c4a759b1a72289ab69f8c'; // Your client id
 var client_secret = '95fc004b1d3e4eddb61c0a752e4ae6da'; // Your client secret
@@ -33,6 +31,29 @@ var generateRandomString = function(length) {
   }
   return text;
 };
+
+
+var get = function(options) {
+  // Return a new promise.
+  return new Promise(function(resolve, reject) {
+    // Do the usual XHR stuff
+    var req = request.get(options, function(error, response, body) {
+      // This is called even on 404 etc
+      // so check the status
+      if (response.statusCode == 200) {
+        // Resolve the promise with the response text
+        resolve(body);
+      }
+      else {
+        // Otherwise reject with the status text
+        // which will hopefully be a meaningful error
+        reject(Error(response.statusText));
+      }
+    });
+  });
+}
+
+
 
 var stateKey = 'spotify_auth_state';
 
@@ -151,7 +172,6 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   var options = {
     url: 'https://api.spotify.com/v1/me/top/artists',
-    type: 'GET',
     headers: { 'Authorization': 'Bearer ' + access_token },
     json: true
   };
@@ -159,10 +179,14 @@ app.get('/get_basic_recommendations', function(req, res) {
   var topArtistList = [];
 
   function getTopArtists(options) {    
-    var topArtistsPromise = http.request(options);
+    var topArtistsPromise = get(options);
     console.log(topArtistsPromise);
 
-    topArtistsPromise.done(function (result) {
+    topArtistsPromise.then(function (result) {
+      console.log("okay");
+      console.log(result);
+      console.log("hm");
+      topArtistList.push("bro");
       var artists = result.items;
       for (artist in artists) {
         topArtistList.push(artist);
@@ -180,12 +204,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   var topArtistsPromise = getTopArtists(options);
 
-  topArtistsPromise.done(function (result) {
+  /*topArtistsPromise.then(function (result) {
     console.log(result);
     res.send({
       'items': topArtistList
     });
-  }); 
+  });*/ 
 });
 
 
