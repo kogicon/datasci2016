@@ -170,52 +170,7 @@ app.get('/get_basic_recommendations', function(req, res) {
 
 
 
-  var options = {
-    url: 'https://api.spotify.com/v1/me/top/artists',
-    headers: { 'Authorization': 'Bearer ' + access_token },
-    json: true
-  };
-  artists = [] 
-  items = []
-
-  request.get(options, function(error, response, body) {
-    console.log("status code: " + response.statusCode);
-    if (!error && response.statusCode === 200) {
-      //console.log(body.items);
-      items += body.items;
-      for (item in body.items) {
-        artist = {name: body.items[item].name, id: body.items[item].id, genres: body.items[item].genres, popularity: body.items[item].popularity}
-        artists.push(artist);
-      }
-      console.log("All done!");
-      if (body.next) {
-        options['url'] = body.next;
-        request.get(options, function(error, response, body) {
-          items += body.items;
-          for (item in body.items) {
-            artist = {name: body.items[item].name, id: body.items[item].id, genres: body.items[item].genres, popularity: body.items[item].popularity}
-            artists.push(artist);
-          }
-          console.log("All done!");
-          if (body.next) {
-            options['url'] = body.next;
-            request.get(options, function(error, response, body) {
-              items += body.items;
-              for (item in body.items) {
-                artist = {name: body.items[item].name, id: body.items[item].id, genres: body.items[item].genres, popularity: body.items[item].popularity}
-                artists.push(artist);
-              }
-              console.log("All done!");
-              res.send({
-                'items': items
-              });
-            });
-          }
-        });
-      }
-    }
-    console.log(artists);
-  });
+  
 
   var topArtistList = [];
   topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
