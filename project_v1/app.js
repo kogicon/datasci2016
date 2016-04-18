@@ -227,8 +227,8 @@ app.get('/get_basic_recommendations', function(req, res) {
 
       sum = 0;
       for (index in relatedArtistsCounts) {
-        console.log(relatedArtistsInfo[index].name);
-        console.log(relatedArtistsCounts[index]);
+        //console.log(relatedArtistsInfo[index].name);
+        //console.log(relatedArtistsCounts[index]);
         sum += relatedArtistsCounts[index];
       }
 
@@ -289,12 +289,8 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   function getTopArtists(options) {    
     var topArtistsPromise = get(options);
-    console.log(topArtistsPromise);
 
     topArtistsPromise.then(function (result) {
-      console.log("okay");
-      console.log(result);
-      console.log("hm");
       var artists = result.items;
       for (index in artists) {
         var artist = artists[index];
@@ -311,6 +307,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
     return topArtistsPromise;
   }
+
+  var options = {
+      url: 'https://api.spotify.com/v1/me/top/artists',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
 
   var topArtistsPromise = getTopArtists(options);
 
