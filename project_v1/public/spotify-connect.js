@@ -28,6 +28,10 @@ Aquires Login tokens from spotify and gets data
       oauthTemplate = Handlebars.compile(oauthSource),
       oauthPlaceholder = document.getElementById('oauth');
 
+  var recArtistSource = document.getElementById('rec-artist-template').innerHTML,
+      recArtistTemplate = Handlebars.compile(recArtistSource),
+      recArtistPlaceholder = document.getElementById('rec-artists');
+
   var musicList = document.getElementById('playlists');
 
   var params = getHashParams();
@@ -56,6 +60,23 @@ Aquires Login tokens from spotify and gets data
 
             $('#login').hide();
             $('#loggedin').show();
+
+
+            document.getElementById('obtain-new-token').addEventListener('click', function() {
+              $.ajax({
+                url: '/refresh_token',
+                data: {
+                  'refresh_token': refresh_token
+                }
+              }).done(function(data) {
+                access_token = data.access_token;
+                oauthPlaceholder.innerHTML = oauthTemplate({
+                  access_token: access_token,
+                  refresh_token: refresh_token
+                });
+              });
+            }, false);
+
           }
       });
       /*$.ajax({
@@ -99,21 +120,6 @@ Aquires Login tokens from spotify and gets data
         $('#loggedin').hide();
     }
 
-    document.getElementById('obtain-new-token').addEventListener('click', function() {
-      $.ajax({
-        url: '/refresh_token',
-        data: {
-          'refresh_token': refresh_token
-        }
-      }).done(function(data) {
-        access_token = data.access_token;
-        oauthPlaceholder.innerHTML = oauthTemplate({
-          access_token: access_token,
-          refresh_token: refresh_token
-        });
-      });
-    }, false);
-
     document.getElementById('get-basic-recommendations').addEventListener('click', function() {
       $.ajax({
         url: '/get_basic_recommendations',
@@ -121,13 +127,16 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
-        top_artists = data.items;
-        console.log(top_artists);
+        rec_artists = data.items;
+        console.log(rec_artists);
         console.log("Nice!");
-        /*oauthPlaceholder.innerHTML = oauthTemplate({
-          access_token: access_token,
-          refresh_token: refresh_token
-        });*/
+        recArtistPlaceholder.innerHTML = "";
+        for (var i = 0; i < rec_artists.length; i++) {
+          var artist = rec_artists[i];
+          recArtistPlaceholder.innerHTML += recArtistTemplate({
+            artist: artist
+          });
+        }
       });
     }, false);
 

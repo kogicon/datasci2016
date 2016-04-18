@@ -218,6 +218,119 @@ app.get('/get_basic_recommendations', function(req, res) {
   });
 
   var topArtistList = [];
+  topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
+  topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c"});
+  topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V"});
+  topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});
+  
+
+  var relatedArtistsCounts = {};
+  var relatedArtistsInfo = {};
+
+  function getAllRelatedArtists() {
+
+    console.log("Getting all related artists!");
+
+    var options = {
+      url: 'https://api.spotify.com/v1/me/artist',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+
+    var RelatedPromises = [];
+
+
+    for (index in topArtistList) {
+      var artist = topArtistList[index];
+      var id = artist.id;
+
+      console.log(id);
+
+      options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
+
+      var RelatedPromise = get(options);
+
+      RelatedPromises.push(RelatedPromise.then(function (result) {
+
+        console.log("got a result!!");
+
+        var artists = result.artists;
+        for (index in artists) {
+          var artist = artists[index];
+          var artistid = artist.id;
+
+          if (!(artistid in relatedArtistsInfo)) {
+            relatedArtistsInfo[artistid] = artist;
+            relatedArtistsCounts[artistid] = 0;
+          }
+          relatedArtistsCounts[artistid] += 1;
+        }
+      }));
+    }
+
+    Promise.all(RelatedPromises).then(function(arrayOfResults) {
+
+      sum = 0;
+      for (index in relatedArtistsCounts) {
+        console.log(relatedArtistsInfo[index].name);
+        console.log(relatedArtistsCounts[index]);
+        sum += relatedArtistsCounts[index];
+      }
+
+      var artistsListened = [];
+
+      for (index in topArtistList) {
+        artistsListened.push(topArtistList[index].id);
+      }
+
+      console.log("Recommended Artists!");
+      recList = getTopRecs(relatedArtistsCounts, 5, artistsListened);
+      console.log("here they are:");
+      console.log(recList.length);
+      recInfoList = [];
+      for (var i = 0; i < recList.length; i++) {
+        var artistID = recList[i];
+        recInfoList.push(relatedArtistsInfo[artistID]);
+        console.log(relatedArtistsInfo[artistID].name);
+        console.log(relatedArtistsCounts[artistID]);
+      }
+      
+
+      console.log("Finsihed printing all related artists!");
+      console.log(sum);
+
+      res.send({
+        'items': recInfoList
+      });
+
+    });
+
+    console.log("reached end of func");
+
+  }
+
+  function getTopRecs(dict, count, artistsListened) {
+    recList = [];
+    currMax = null;
+    while (recList.length < count) {
+      currMax = null;
+      for (index in dict) {
+        if (recList.indexOf(index) <= -1 && artistsListened.indexOf(index) <= -1) {
+          if (currMax == null) {
+            currMax = index;
+          } else if (dict[currMax] < dict[index]) {
+            currMax = index;
+          }
+        }
+      }
+      if (currMax == null) {
+        break;
+      } else {
+        recList.push(currMax);
+      }
+    }
+    return recList;
+  }
 
   function getTopArtists(options) {    
     var topArtistsPromise = get(options);
@@ -228,7 +341,8 @@ app.get('/get_basic_recommendations', function(req, res) {
       console.log(result);
       console.log("hm");
       var artists = result.items;
-      for (artist in artists) {
+      for (index in artists) {
+        var artist = artists[index];
         topArtistList.push(artist);
       }
       if (result.next) {
@@ -236,9 +350,7 @@ app.get('/get_basic_recommendations', function(req, res) {
         return getTopArtists(options);
       } else {
         console.log(topArtistList);
-        res.send({
-          'items': topArtistList
-        });
+        getAllRelatedArtists();
       }
     });
 

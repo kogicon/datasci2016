@@ -13,7 +13,7 @@
         margin-bottom: 130px;
       }
 
-      #artists img, #tracks img {
+      #artists img, #tracks img, .placeholder-img {
         width: 100px;
         height: 100px;
         float: left;
@@ -41,54 +41,84 @@
         white-space: nowrap;
         width: 500px;
       }
+
+      .artist img {
+        height: 150px;
+        float: left;
+      }
+
+      .artist ul {
+        list-style-type: none;
+        float: left;
+      }
+
+      .artist {
+        position: relative;
+        width: 100%;
+        height: 170px;
+      }
+
     </style>
   </head>
 
   <body>
-    <h1>MUSIC</h1>
-    <h2>Recommended Artists</h2>
-    <div id = "artists">
-      <img src = "http://goo.gl/G9fuWN" />
-      <ul>
-        <li><b>Artist name:</b></li>
-        <li><b>Artist genre:</b></li>
-        <li><b>Spotify URL:</b></li>
-        <li><b>Related artists:</b></li>
-      </ul>
-    </div>
-
-    <h2>Recommended Tracks</h2>
-    <div id = "tracks">
-      <img src = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQdqDKxQThpFkx2RRJrwX-ZNUBBj6a4V7RAhCa2__nJzr2XToaJ" />
-      <ul>
-        <li><b>Track name:</b></li>
-        <li><b>Track album:</b></li>
-        <li><b>Track's audio features:</b></li>
-        <li><b>Related tracks:</b></li>
-      </ul>
-    </div>
-
-    <!-- <h2>User's Playlists and Songs</h2>
-      <div id="playlists">
-      </div> -->
 
     <div class="container">
+      <h1>TrebleClef Music Recommendation Engine</h1>
       <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="login" class="btn btn-primary">Log in with Spotify</a>
+        <center>
+          <a href="login" class="btn btn-primary">Log in with Spotify</a>
+        </center>
       </div>
       <div id="loggedin">
         <div id="user-profile">
         </div>
         <div id="oauth">
         </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-        <button class="btn btn-default" id="get-basic-recommendations">Get Basic Recommendations</button>
+
+        <center>
+          <button class="btn btn-primary" id="get-basic-recommendations">Get Basic Recommendations</button>
+        </center>
+
+
+        <h2>Recommended Artists</h2>
+        <div id="rec-artists">
+          <div class="artist">
+            <img class="placeholder-img" src = "http://goo.gl/G9fuWN" />
+            <ul class="artist-info">
+              <li><h1>An Adorable Penguin</h1></li>
+              <li><b>Artist genre: chill</b></li>
+              <li><b>Spotify URL: (N/N)</b></li>
+              <li><b>Related artists: (N/A)</b></li>
+            </ul>
+        </div>
+        </div>
+        <h2>Recommended Tracks</h2>
+        <div id = "tracks">
+          <img src = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQdqDKxQThpFkx2RRJrwX-ZNUBBj6a4V7RAhCa2__nJzr2XToaJ" />
+          <ul>
+            <li><b>Track name:</b></li>
+            <li><b>Track album:</b></li>
+            <li><b>Track's audio features:</b></li>
+            <li><b>Related tracks:</b></li>
+          </ul>
+        </div>
       </div>
     </div>
 
+    <script id="rec-artist-template" type="text/x-handlebars-template">
+      <div class="artist">
+        <img class="artist-img med" src = "{{artist.images.2.url}}" />
+        <ul class="artist-info">
+          <li><h1>{{artist.name}}</h1></li>
+          <li><b>Artist genre: {{artist.genres}}</b></li>
+          <li><b>Spotify URL: <a target="_blank" href="https://play.spotify.com/artist/{{artist.id}}">{{artist.uri}}</a></b></li>
+          <li><b>Related artists: (N/A)</b></li>
+        </ul>
+      </div>
+    </script>
+
     <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
       <div class="media">
         <div class="pull-left">
           <img class="media-object" width="150" src="{{images.0.url}}" />
@@ -100,19 +130,20 @@
             <dt>Email</dt><dd>{{email}}</dd>
             <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
             <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
             <dt>Country</dt><dd>{{country}}</dd>
+            <dt></dt><dd><button class="btn btn-default" id="obtain-new-token">Obtain new token</button></dd>
           </dl>
         </div>
       </div>
     </script>
 
     <script id="oauth-template" type="text/x-handlebars-template">
-      <h2>oAuth info</h2>
+      <!--<h2>oAuth info</h2>
       <dl class="dl-horizontal">
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
       </dl>
+      -->
     </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
