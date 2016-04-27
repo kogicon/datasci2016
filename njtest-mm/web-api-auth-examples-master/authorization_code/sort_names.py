@@ -9,3 +9,5 @@ print len(successful_array), successful_array
 set_of_array = set(successful_array)
 
 print len(set_of_array)
+
+# Matt has collected usernames from Spotify's community webpage. Since these usernames and spotify user_id's are different, but possibly the same due to similar platforms, the usernames were checked to see if it was a valid user_id and if the user had a playlist. A total of 100 usernames have been collected so far.
