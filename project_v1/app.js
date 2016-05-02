@@ -114,12 +114,113 @@ app.get('/callback', function(req, res) {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        var options = {
+        /*var options = {
           url: 'https://api.spotify.com/v1/me/playlists',
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: true
-        };
+        };*/
+        
 
+        function getRandomArtists(options) {
+          var randomArtistsPromise = get(options);
+          console.log("got random artist");
+          randomArtistsPromise.then(function (result) {
+            //console.log("result: " + result.items);
+            //console.log("next: " + result.items.next);
+            //console.log(result.artists.items);
+            var artists = result.artists.items;
+            //console.log(artists);
+            var randomArtistList = []
+            
+            for (index in artists) {
+              //console.log(artist[index])
+              randomArtistList.push(artist[index])
+            }
+            console.log(randomArtistList)
+            for (index in randomArtistList) {
+              artist = randomArtistList[index]
+              //console.log(artist);
+
+            }
+            if (result.artists.next) {
+              console.log("getting to next")
+              options['url'] = result.artists.next;
+              return getRandomArtists(options);
+            }
+          });
+        }
+              /*console.log("getting here");
+              var artistid = artists[index].id;
+              //console.log(artistid);
+              //console.log("id: " + artistid);
+              var albumoptions = {
+                url: "https://api.spotify.com/v1/artists/"+artistid+"/albums",
+                headers: { 'Authorization': 'Bearer ' + access_token },
+                json: true
+              };
+              albumPromise = get(albumoptions);
+              albumPromise.then(function(result) {
+                mostRecentAlbumId = result.items[0].id;
+                console.log(mostRecentAlbumId);
+                var tracksoptions = {
+                  url: "https://api.spotify.com/v1/albums/"+mostRecentAlbumId+"/tracks",
+                  headers: { 'Authorization': 'Bearer ' + access_token },
+                  json: true
+                };
+                tracksPromise = get(tracksoptions);
+                tracksPromise.then(function(result) {
+                  //tracks = result
+                  //console.log(result.items);
+                  albumTracks = result.items;
+                  for (index in albumTracks) {
+                    albumPromises = []
+                    //console.log(albumTracks[index].popularity);
+                    var trackoptions = {
+                      url: "https://api.spotify.com/v1/tracks/"+albumTracks[index].id,
+                      headers: { 'Authorization': 'Bearer ' + access_token },
+                      json: true
+                    };
+                    trackPromise = get(trackoptions);
+                    albumPromises.push(trackPromise);
+                    Promise.all(albumPromises).then(function(result) {
+                      //console.log(result);
+                      track = {id: result.id, track_number: result.track_number, popularity: result.popularity};
+                      console.log("track: " + track);
+                      album.push(track);
+                    })
+                  }
+                })
+              })
+              console.log("being pushed");
+              allAlbums.push(album);
+
+  
+            }*/
+
+            /*if (result.artists.next) {
+              options['url'] = result.artists.next;
+              return getRandomArtists(options);
+            } else {
+              var randNumber = (Math.floor(Math.random() * allArtists.length) + 1).toString() 
+              randomartist["url"] = "https://api.spotify.com/v1/search?q=year%3A2001&type=artist&market=US&limit=1&offset=".concat(randNumber);
+              var randomArtistPromise = get(randomartist);
+              randomArtistPromise.then(function (result) {
+                var randArtist = result.items;
+                console.log(randArtist[0]);
+              });
+            }*/
+            /*var albumoptions = {
+              url: "https://api.spotify.com/v1/artists//albums",
+              headers: { 'Authorization': 'Bearer ' + access_token },
+              json: true
+            };*/
+
+        var options = {
+            url: "https://api.spotify.com/v1/search?q=year%3A2000-2016&type=artist&market=US",
+            headers: { 'Authorization': 'Bearer ' + access_token },
+            json: true
+        };
+        var randomArtistsPromise = getRandomArtists(options);
         // use the access token to access the Spotify Web API
         /*request.get(options, function(error, response, body) {
         for (var i = 0; i < body.items.length; i++) {
@@ -308,22 +409,10 @@ app.get('/get_basic_recommendations', function(req, res) {
     return topArtistsPromise;
   }
 
-  var options = {
-      url: 'https://api.spotify.com/v1/me/top/artists',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
-
-  var topArtistsPromise = getTopArtists(options);
-
-  /*topArtistsPromise.then(function (result) {
-    console.log(result);
-    res.send({
-      'items': topArtistList
-    });
-  });*/
+ 
 
 });
+
 
 
 app.get('/refresh_token', function(req, res) {
@@ -352,3 +441,4 @@ app.get('/refresh_token', function(req, res) {
 
 console.log('Listening on 8888');
 app.listen(8888);
+

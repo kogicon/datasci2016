@@ -140,6 +140,21 @@ Aquires Login tokens from spotify and gets data
       });
     }, false);
 
+    document.getElementById('cluster-artists').addEventListener('click', function() {
+      $.ajax({
+        url: '/cluster-artists',
+        data: {
+          'access_token': access_token
+        }
+      }).done(function(data) {
+        rec_artists = data.items;
+        console.log(rec_artists);
+        console.log("Nice!");
+        recArtistPlaceholder.innerHTML = "";
+       
+      });
+    }, false);
+
 
   }
 })();
