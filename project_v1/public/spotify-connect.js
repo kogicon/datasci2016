@@ -31,6 +31,10 @@ Aquires Login tokens from spotify and gets data
   var recArtistSource = document.getElementById('rec-artist-template').innerHTML,
       recArtistTemplate = Handlebars.compile(recArtistSource),
       recArtistPlaceholder = document.getElementById('rec-artists');
+  
+  var hipsterScoreSource = document.getElementById('hipster-score-template').innerHTML,
+      hipsterScoreTemplate = Handlebars.compile(hipsterScoreSource),
+      hipsterScorePlaceholder = document.getElementById('score-view');
 
   var musicList = document.getElementById('playlists');
 
@@ -137,6 +141,23 @@ Aquires Login tokens from spotify and gets data
             artist: artist
           });
         }
+      });
+    }, false);
+
+    document.getElementById('get-hipster-score').addEventListener('click', function() {
+      $.ajax({
+        url: '/get_hipster_score',
+        data: {
+          'access_token': access_token
+        }
+      }).done(function(data) {
+        var score = data.score;
+        var genres = data.genres;
+        console.log(data);
+        hipsterScorePlaceholder.innerHTML = hipsterScoreTemplate({
+            score: score,
+            genres: Object.keys(genres).length
+          });
       });
     }, false);
 

@@ -33,20 +33,18 @@ var generateRandomString = function(length) {
 };
 
 
-var get = function(options) {
-  // Return a new promise.
+
+/* Get - Makes an ajax get call in javascript, and returns a promise
+*   that will resolve when the ajax call returns.
+*   @params {object} the dictionary of options to be used in the get call
+*   @return {Promise} the ajax Promise
+*/
+var get = function(options) {  
   return new Promise(function(resolve, reject) {
-    // Do the usual XHR stuff
     var req = request.get(options, function(error, response, body) {
-      // This is called even on 404 etc
-      // so check the status
       if (response.statusCode == 200) {
-        // Resolve the promise with the response text
         resolve(body);
-      }
-      else {
-        // Otherwise reject with the status text
-        // which will hopefully be a meaningful error
+      } else {
         reject(Error(response.statusText));
       }
     });
@@ -159,6 +157,173 @@ app.get('/callback', function(req, res) {
     });
   }
 });
+
+app.get('/get_hipster_score', function(req, res) { 
+
+  console.log("getting basic recs");
+  var access_token = req.query.access_token;
+
+  console.log(access_token);
+
+
+
+  allTracksList = [];
+  trackScoreList = [];
+  trackGenreDict = {};
+  trackArtistList = [];
+
+  function getAllArtists() {
+
+    console.log("Getting all artists!");
+    console.log(trackArtistList);
+
+    var options = {
+      url: 'https://api.spotify.com/v1/me/artist',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+
+    var ArtistPromises = [];
+
+    for (index in trackArtistList) {
+      options['url'] = trackArtistList[index];
+
+      var ArtistPromise = get(options);
+
+      ArtistPromises.push(ArtistPromise.then(function (result) {
+
+        //console.log("got an Artist result!!");
+        //console.log(result);
+
+        for (index in result.genres) {
+          var genre = result.genres[index];
+          console.log("Genre! "+genre + " from " + result.name);
+          if (!genre in trackGenreDict) {
+            trackGenreDict[genre] = 0;
+          }
+          trackGenreDict[genre] += 1;
+        }
+      }));
+    }
+
+    Promise.all(ArtistPromises).then(function(arrayOfResults) {
+      console.log("getting genre count!");
+      
+
+      var total = 0;
+      for (index in trackScoreList) {
+        total += trackScoreList[index];
+      }
+      total = 100 - total/trackScoreList.length;
+
+      res.send({
+        'score': total,
+        'genres': trackGenreDict
+      });
+
+    });
+
+    console.log("reached end of func");
+
+  }
+
+  function getAllTracks() {
+
+    console.log("Getting all tracks!");
+    console.log(allTracksList);
+
+    var options = {
+      url: 'https://api.spotify.com/v1/me/artist',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+
+    var TrackPromises = [];
+
+    for (index in allTracksList) {
+      console.log(index);
+      var tracks = allTracksList[index];
+      options['url'] = tracks.href;
+
+      var TrackPromise = get(options);
+
+      TrackPromises.push(TrackPromise.then(function (result) {
+
+        console.log("got a tracks result!!");
+
+
+        var tracks = result.items;
+        for (index in tracks) {
+          var track = tracks[index].track;
+          console.log(track);
+          trackScoreList.push(track.popularity);
+          for (index2 in track.artists) {
+            var artist = track.artists[index2];
+            trackArtistList.push(artist.href);
+          }
+        }
+      }));
+    }
+
+    Promise.all(TrackPromises).then(function(arrayOfResults) {
+      console.log("getting artists");
+
+
+      getAllArtists();
+
+      /*var total = 0;
+      for (index in trackScoreList) {
+        total += trackScoreList[index];
+      }
+      total = 100 - total/trackScoreList.length;
+
+      res.send({
+        'score': total
+      });*/
+
+    });
+
+    console.log("reached end of func");
+
+  }
+
+
+  function getAllPlaylists(options) {    
+    var playlistsPromise = get(options);
+
+    playlistsPromise.then(function (result) {
+      console.log(result);
+      var playlists = result.items;
+      for (index in playlists) {
+        var playlist = playlists[index];
+        console.log(playlist.tracks);
+        allTracksList.push(playlist.tracks);
+      }
+      if (result.next) {
+        options['url'] = result.next;
+        return getAllPlaylists(options);
+      } else {
+        getAllTracks();
+      }
+    });
+
+    return playlistsPromise;
+  }
+
+
+  userID = "me";
+
+  var options = {
+    url: 'https://api.spotify.com/v1/me/playlists',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+
+  var getPlaylistsPromise = getAllPlaylists(options);
+
+
+});
+
 
 app.get('/get_basic_recommendations', function(req, res) { 
 

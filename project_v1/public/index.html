@@ -58,6 +58,39 @@
         height: 170px;
       }
 
+      .bigText {
+        font-size: 48px;
+        font-weight: 700;
+      }
+
+      .red {
+        color: #CF000F;
+      }
+
+      .white {
+        color: white;
+      }
+
+      .redBack {
+        background-color: #CF000F;
+      }
+
+      .purpleBack {
+        background-color: #8870FF;
+      }
+
+      .callToAction {
+        border-radius: 1em;
+        padding: .1em;
+        margin: .3em;
+        width: auto;
+      }
+      .callToAction > h1 {
+        margin: .1em;
+        width: auto;
+      }
+
+
     </style>
   </head>
 
@@ -78,7 +111,12 @@
 
         <center>
           <button class="btn btn-primary" id="get-basic-recommendations">Get Basic Recommendations</button>
+          <button class="btn btn-primary" id="get-hipster-score">Get Hipster Score</button>
         </center>
+
+        <div id="score-view">
+        </div>
+        
 
 
         <h2>Recommended Artists</h2>
@@ -116,6 +154,11 @@
           <li><b>Related artists: (N/A)</b></li>
         </ul>
       </div>
+    </script>
+
+    <script id="hipster-score-template" type="text/x-handlebars-template">
+      <center><div class="callToAction redBack"><h1 class="bigText white">Hipster Score: {{score}}</h1></div></center>
+      <center><div class="callToAction purpleBack"><h1 class="bigText white">#Genres: {{genres}}</h1></div></center>
     </script>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
