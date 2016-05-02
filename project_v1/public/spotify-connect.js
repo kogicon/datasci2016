@@ -31,6 +31,10 @@ Aquires Login tokens from spotify and gets data
   var recArtistSource = document.getElementById('rec-artist-template').innerHTML,
       recArtistTemplate = Handlebars.compile(recArtistSource),
       recArtistPlaceholder = document.getElementById('rec-artists');
+  
+  var hipsterScoreSource = document.getElementById('hipster-score-template').innerHTML,
+      hipsterScoreTemplate = Handlebars.compile(hipsterScoreSource),
+      hipsterScorePlaceholder = document.getElementById('score-view');
 
   var musicList = document.getElementById('playlists');
 
@@ -140,18 +144,34 @@ Aquires Login tokens from spotify and gets data
       });
     }, false);
 
+<<<<<<< HEAD
     document.getElementById('cluster-artists').addEventListener('click', function() {
       $.ajax({
         url: '/cluster-artists',
+=======
+    document.getElementById('get-hipster-score').addEventListener('click', function() {
+      $.ajax({
+        url: '/get_hipster_score',
+>>>>>>> 0882cd045de703cf6fc06f51b456c35d5348c78c
         data: {
           'access_token': access_token
         }
       }).done(function(data) {
+<<<<<<< HEAD
         rec_artists = data.items;
         console.log(rec_artists);
         console.log("Nice!");
         recArtistPlaceholder.innerHTML = "";
        
+=======
+        var score = data.score;
+        var genres = data.genres;
+        console.log(data);
+        hipsterScorePlaceholder.innerHTML = hipsterScoreTemplate({
+            score: score,
+            genres: Object.keys(genres).length
+          });
+>>>>>>> 0882cd045de703cf6fc06f51b456c35d5348c78c
       });
     }, false);
 
