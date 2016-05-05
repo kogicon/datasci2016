@@ -232,7 +232,7 @@ app.get('/get_hipster_score', function(req, res) {
           for (index in artist.genres) {
             var genre = artist.genres[index];
             //console.log("Genre! "+genre + " from " + artist.name);
-            if (!genre in trackGenreDict) {
+            if (!(genre in trackGenreDict[userID])) {
               trackGenreDict[userID][genre] = 0;
             }
             trackGenreDict[userID][genre] += 1;
@@ -255,9 +255,12 @@ app.get('/get_hipster_score', function(req, res) {
       }
       total = 100 - total/trackScoreList[userID].length;
 
-      finalScoreList[userID] = [total, Object.keys(trackGenreDict[userID]).length, trackSepCountList[userID], trackArtistCountList[userID]];
+      finalScoreList[userID] = [total, trackGenreDict[userID], trackSepCountList[userID], trackArtistCountList[userID]];
 
       console.log("finalScoreList");
+      console.log("|");
+      console.log("|");
+      console.log("|");
       console.log(finalScoreList);
 
       res.send({
@@ -350,13 +353,24 @@ app.get('/get_hipster_score', function(req, res) {
     return playlistsPromise;
   }
 
-  userIDs = ["anthonylennon", "kieronjr", "kr1978", "1296741408", "osornios", "legcow", "stokedpepsi", "djelito", "niffle7", "12170982700", "12122592020", "rjvms", "miguelmarquez", "raoul95", "brenna_camille", "alisonwerder", "skillshot", "manakahofski", "rior_4", "sigoptic", "pedrofranca16", "caamich", "brianawills05", "harmonyjanay", "1215498199", "danyedidovich", "hietschb", "jray161", "bassman999", "ninami19", "kylobren", "imaustinjacobm", "atorres922", "testdummy1122", "judahg", "epicskate", "uuinsider", "soulamusic", "amendy", "garrett_carder", "rcerwin09", "izzie98", "tresand12", "lhmoore", "snowmk94", "danilions", "shengels", "cbmdlt", "sarauc28", "pjwpkm", "xka22", "niightmarez", "1249542388", "alibretz", "awalker88", "mikedurelli", "giruto", "wjtan123", "inesflacerda", "maham", "mansoa4", "laffysapphy", "stellar321", "murillocr", "sanson99", "downlucks", "deadsilence6", "tommyx25", "ashwhimp", "18athoreso", "mazthebows", "lesbiandraste", "rickvanmook", "ellengarfinkle", "dancer152636", "demi_1019", "leopold7777", "oliviafaas", "zseven1", "rebekahljw", "fridavictoria", "itsjustaphase", "freyerf", "adrianntorress", "julenekluth", "dale_family", "jtom69", "atmbomber", "jot_es", "o8iio", "aenikirk", "drinkxbleach", "q_bair", "jonathangaddis", "justeldrin", "d0llfface", "paytoncarver", "bkeirden", "fannsaw", "tony9401"];
+  userIDs = ["robdi1111", "robsclone", "roneymed", 
+  "rrs72", "rrstanny", "rsfiction", "ryanvarner2321", "rydot", "samrsharp", "sanjaynomi", "schabrow", "schiff", "scootsie00", "sean_dever", "seansteegpierce", "sebbiwu", "shawnmartens", "siamesedrummer", 
+  "skelley42", "sky_hartley", "smeckerle", "sonachi35", "spiritkoala", "spocknado", "spotifysample00", "stephensobota", "sunskizzle", "timr11", "tititiia", "tmccue", "tmlove1230", "tmobil", 
+  "toastywarrior", "tomcreamer", "truthgamerpro", "turnthepage1995", "txcrew", "varangian56", "veronicakissane", "vladisfc3", "vm2jacarei", "watedi", "xoxonad", "zadiespop", "zhangyuzexxx"];
 
-  //["anthonylennon", "kieronjr", "kr1978", "1296741408", "osornios"];
+  /*
+"anthonylennon", "kieronjr", "kr1978", "1296741408", "osornios", "legcow", "stokedpepsi", "djelito", "niffle7", "12170982700", "12122592020", "rjvms", "miguelmarquez", 
+  "raoul95", "brenna_camille", "alisonwerder", "skillshot", "manakahofski", "rior_4", "sigoptic", "pedrofranca16", "caamich", "brianawills05", "harmonyjanay", "1215498199", "danyedidovich", 
+  "hietschb", "jray161", "bassman999", "ninami19", "kylobren", "imaustinjacobm", "atorres922", "testdummy1122", "judahg", "epicskate", "uuinsider", "soulamusic", "amendy", "garrett_carder", 
+  "rcerwin09", "izzie98", "tresand12", "lhmoore", "snowmk94", "danilions", "shengels", "cbmdlt", "sarauc28", "pjwpkm", "xka22", "niightmarez", "1249542388", "alibretz", "awalker88", "mikedurelli", 
+  "giruto", "wjtan123", "inesflacerda", "maham", "mansoa4", "laffysapphy", "stellar321", "murillocr", "sanson99", "downlucks", "deadsilence6", "tommyx25", "ashwhimp", "18athoreso", "mazthebows", 
+  "lesbiandraste", "rickvanmook", "ellengarfinkle", "dancer152636", "demi_1019", "leopold7777", "oliviafaas", "zseven1", "rebekahljw", "fridavictoria", "itsjustaphase", "freyerf", "adrianntorress", 
+  "julenekluth", "dale_family", "jtom69", "atmbomber", "jot_es", "o8iio", "aenikirk", "drinkxbleach", "q_bair", "jonathangaddis", "justeldrin", "d0llfface", "paytoncarver", "bkeirden", "fannsaw", "tony9401",
+  */
 
   //"legcow", "stokedpepsi", "djelito", "niffle7", "12170982700"
   var callForUser = function (useridx) {
-    userID = userIDs[useridx];
+    userID = userIDs[useridx].toLowerCase();
 
     console.log(userID);
     allTracksList[userID] 

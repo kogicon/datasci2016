@@ -1,0 +1,201 @@
+artist to popularity dict
+
+{ '3TVXtAsR1Inumwj472S9r4': 100,
+
+  '5K4W6rqBFWDnAN6FQUkS6x': 96,
+
+  '5pKCCKE2ajJHZ9KAiaK11H': 96,
+
+  '1uNFoZAHBGtllmzznpCI3s': 96,
+
+  '1Xyo4u8uXC1ZmMpatF05PJ': 92,
+
+  '02kJSzxNuaWGqwubyUba0Z': 91,
+
+  '55Aa2cqylxrFIXC767Z865': 89,
+
+  '1RyvyyTE3xzB2ZywiAwp0i': 88,
+
+  '7bXgB6jMjp9ATFy66eO08Z': 90,
+
+  '6PXS4YHDkKvl1wkIl4V8DL': 90,
+
+  '3YQKmKGau1PzlVlkL1iodx': 91,
+
+  '2YZyLoL8N0Wb9xBt1NhZWg': 88,
+
+  '7c0XG5cIJTrrAgEC3ULPiq': 91,
+
+  '7dGJo4pcD2V6oG8kP0tJRR': 90,
+
+  '6l3HvQ5sa6mXTsMTB19rO5': 86,
+
+  '1gPhS1zisyXr5dHTYZyiMe': 84,
+
+  '137W8MRPWKqSmrBGDBFSop': 88,
+
+  '5ZsFI1h6hIdQRw2ti0hz81': 91,
+
+  '0hCNtLu0JehylgoiP8L4Gh': 88,
+
+  '0c173mlxpT3dSFRgMO8XPh': 86,
+
+  '66CXWjxzNUsdJxJ2JdwvnR': 90,
+
+  '69GGBxA162lTqCwzJG5jLp': 90,
+
+  '5WUlDfRSoLAfcVSX1WnrxN': 93,
+
+  '17lzZA2AlOHwCwFALHttmp': 85,
+
+  '2EMAnMvWE2eb56ToJVfCWs': 84,
+
+  '3KV3p5EY4AvKxOlhGHORLg': 85,
+
+  '50co4Is1HCEo8bhOyUWKpn': 84,
+
+  '5EgHxnLSdBst14bCceq7S4': 85,
+
+  '6vWDO969PvNqNYHIOW5v0m': 88,
+
+  '3nFkdlSjzX9mRTtwJOzDYB': 87,
+
+  '20JZFwl6HVl6yg8a4H3ZqK': 84,
+
+  '4AK6F7OLvEQ5QYCBNiQWHq': 89,
+
+  '6eUKZXaKkcviH0Ku9w2n3V': 90,
+
+  '6Dd3NScHWwnW6obMFbl1BH': 88,
+
+  '13ubrt8QOOCPljQ2FL1Kca': 84,
+
+  '4gzpq5DPGxSnKTe4SA8HAU': 92,
+
+  '1l8Fu6IkuTP0U5QetQJ5Xt': 89,
+
+  '5he5w2lnU9x7JFhnwcekXX': 86,
+
+  '0jnsk9HBra6NMjO2oANoPY': 87,
+
+  '0BvkDsjIUla7X0k6CSWh1I': 81,
+
+  '3tVQdUvClmAT7URs9V3rsp': 87,
+
+  '4UXqAaa6dQYAk18Lv7PEgX': 84,
+
+  '7pFeBzX627ff0VnN6bxPR4': 84,
+
+  '0C8ZW7ezQVs4URX5aX7Kqx': 87,
+
+  '2i6zkLCRqT8Jn0gnigXPe7': 86,
+
+  '6JL8zeS1NmiOftqZTRgdTz': 87,
+
+  '3WrFJ7ztbogyGnTHbHJFl2': 86,
+
+  '26VFTg2z8YR0cCuwLzESi2': 83,
+
+  '16oZKvXb6WkQlVAjwo2Wbg': 83,
+
+  '25u4wHJWxCA9vO0CzxAbK7': 88,
+
+  '5LHRHt1k9lMyONurDHEdrp': 84,
+
+  '2KsP6tYLJlTBvSUxnwlVWa': 87,
+
+  '1Xylc3o4UrD53lo9CvFvVg': 89,
+
+  '64M6ah0SkkRsnPGtGiRAbb': 87,
+
+  '738wLrAtLtCtFOLvQBXOXp': 91,
+
+  '540vIaP2JwjQb9dm3aArA4': 87,
+
+  '0Y5tJX1MQlPlqiwlOH1tJY': 81,
+
+  '07YZf4WDAMNwqr4jfgOZ8y': 87,
+
+  '3WGpXCj9YhhfX11TToZcXP': 84,
+
+  '7iZtZyCzp3LItcw1wtPI3D': 80,
+
+  '0X2BH1fck6amBIoJhDVmmJ': 86,
+
+  '63yrD80RY3RNEM2YDpUpO8': 81,
+
+  '23fqKkggKUBHNkbKtXEls4': 89,
+
+  '23zg3TcAtWQy7J6upgbUnj': 83,
+
+  '04gDigrS5kc9YWfZHwBETP': 86,
+
+  '4NHQUGzhtTLFvgF5SZesLK': 85,
+
+  '4OBJLual30L7gRl5UkeRcT': 81,
+
+  '5dHt1vcEm9qb8fCyLcB3HL': 80,
+
+  '4dpARuHxo51G3z768sgnrY': 88,
+
+  '6KZDXtSj0SzGOV705nNeh3': 83,
+
+  '00FQb4jTyendYWaN8pK0wa': 83,
+
+  '4xRYI6VqpkE3UwrDrAZL8L': 79,
+
+  '3mIj9lX2MWuHmhNCA7LSCW': 83,
+
+  '1sBkRIssrMs1AbVkOJbc7a': 80,
+
+  '2iojnBLj0qIMiKPvVhLnsH': 80,
+
+  '360IAlyVv4PCEVjgyMZrxK': 80,
+
+  '0du5cEVh5yTK9QJze8zA0C': 85,
+
+  '3b8QkneNDz4JHKKKlLgYZg': 78,
+
+  '6Ha4aES39QiVjR0L2lwuwq': 79,
+
+  '0TnOYISbd1XYRBk9myaseg': 85,
+
+  '7n2wHs1TKAczGzO7Dd2rGr': 87,
+
+  '2wY79sveU1sp5g7SokKOiI': 85,
+
+  '2wUjUUtkb5lvLKcGKsKqsR': 83,
+
+  '3UUJfRbrA2nTbcg4i0MOwu': 78,
+
+  '1anyVhU62p31KFi8MEzkbf': 82,
+
+  '73sIBHcqh3Z3NyqHKZ7FOL': 79,
+
+  '5IcR3N7QB1j6KBL8eImZ8m': 80,
+
+  '2kucQ9jQwuD8jWdtR9Ef38': 78,
+
+  '7hJcb9fa4alzcOq3EaNPoG': 83,
+
+  '5lHRUCqkQZCIWeX7xG4sYT': 79,
+
+  '6x2LnllRG5uGarZMsD4iO8': 77,
+
+  '53XhwfbYqKCa1cC15pYq2q': 84,
+
+  '5gCRApTajqwbnHHPbr2Fpi': 80,
+
+  '6T5tfhQCknKG4UnH90qGnz': 85,
+
+  '6VuMaDnrHyPL1p4EHjYLi7': 85,
+
+  '3crnzLy8R4lVwaigKEOz7V': 78,
+
+  '7CajNmpbOovFoOoasH2HaY': 86,
+
+  '5fMUXHkw8R8eOP2RNVYEZX': 84,
+
+  '2IvkS5MXK0vPGnwyJsrEyV': 77,
+
+  '3FfvYsEGaIb52QPXhg4DcH': 77 }
