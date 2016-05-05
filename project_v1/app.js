@@ -32,7 +32,12 @@ var generateRandomString = function(length) {
   return text;
 };
 
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+}
 
+var rejcount = 0;
 
 /* Get - Makes an ajax get call in javascript, and returns a promise
 *   that will resolve when the ajax call returns.
@@ -42,11 +47,22 @@ var generateRandomString = function(length) {
 var get = function(options) {  
   return new Promise(function(resolve, reject) {
     var req = request.get(options, function(error, response, body) {
-      if (response.statusCode == 200) {
-        resolve(body);
+      if (response) {
+        if (response.statusCode == 200) {
+          resolve(body);
+        } else {
+          rejcount++;
+          console.log("REJECTING" + rejcount);
+          //console.log(response);
+          resolve({});
+          //reject(Error(response.statusText));
+        }
       } else {
-        reject(Error(response.statusText));
+        console.log(">>>>>>> SUPER REJECTING");
+        resolve({});
+        //reject(Error("response not found"));
       }
+
     });
   });
 }
@@ -160,22 +176,25 @@ app.get('/callback', function(req, res) {
 
 app.get('/get_hipster_score', function(req, res) { 
 
-  console.log("getting basic recs");
+  //console.log("getting basic recs");
   var access_token = req.query.access_token;
 
-  console.log(access_token);
+  //console.log(access_token);
 
 
 
-  allTracksList = [];
-  trackScoreList = [];
+  allTracksList = {};
+  trackScoreList = {};
   trackGenreDict = {};
-  trackArtistList = [];
+  trackArtistList = {};
+  finalScoreList = {};
+  trackArtistCountList = {};
+  trackSepCountList = {};
 
-  function getAllArtists() {
+  function getAllArtists(userID) {
 
-    console.log("Getting all artists!");
-    console.log(trackArtistList);
+    //console.log("Getting all artists!");
+    //console.log(trackArtistList);
 
     var options = {
       url: 'https://api.spotify.com/v1/me/artist',
@@ -185,8 +204,18 @@ app.get('/get_hipster_score', function(req, res) {
 
     var ArtistPromises = [];
 
-    for (index in trackArtistList) {
-      options['url'] = trackArtistList[index];
+
+    for (var index = 0; index <= trackArtistList[userID].length; index+=50) {
+      var ids = "";
+      for (var j = 0; j < 50; j++) {
+        if (index + j >= trackArtistList[userID].length) {
+          break;
+        }
+        var sp = trackArtistList[userID][index+j].split("/");
+        ids += sp[sp.length-1] + ",";
+      }
+      ids = ids.slice(0,ids.length-1);
+      options['url'] = 'https://api.spotify.com/v1/artists?ids='+ids;
 
       var ArtistPromise = get(options);
 
@@ -195,42 +224,57 @@ app.get('/get_hipster_score', function(req, res) {
         //console.log("got an Artist result!!");
         //console.log(result);
 
-        for (index in result.genres) {
-          var genre = result.genres[index];
-          console.log("Genre! "+genre + " from " + result.name);
-          if (!genre in trackGenreDict) {
-            trackGenreDict[genre] = 0;
+        for (artistidx in result.artists) {
+          var artist = result.artists[artistidx];
+
+          trackArtistCountList[userID] += 1;
+
+          for (index in artist.genres) {
+            var genre = artist.genres[index];
+            //console.log("Genre! "+genre + " from " + artist.name);
+            if (!genre in trackGenreDict) {
+              trackGenreDict[userID][genre] = 0;
+            }
+            trackGenreDict[userID][genre] += 1;
           }
-          trackGenreDict[genre] += 1;
+          if (artist.genres.length == 0) {
+            trackSepCountList[userID] += 1;
+          }
         }
+
       }));
     }
 
     Promise.all(ArtistPromises).then(function(arrayOfResults) {
-      console.log("getting genre count!");
+      //console.log("getting genre count!");
       
 
       var total = 0;
-      for (index in trackScoreList) {
-        total += trackScoreList[index];
+      for (index in trackScoreList[userID]) {
+        total += trackScoreList[userID][index];
       }
-      total = 100 - total/trackScoreList.length;
+      total = 100 - total/trackScoreList[userID].length;
+
+      finalScoreList[userID] = [total, Object.keys(trackGenreDict[userID]).length, trackSepCountList[userID], trackArtistCountList[userID]];
+
+      console.log("finalScoreList");
+      console.log(finalScoreList);
 
       res.send({
         'score': total,
-        'genres': trackGenreDict
+        'genres': Object.keys(trackGenreDict).length
       });
 
     });
 
-    console.log("reached end of func");
+    //console.log("reached end of func");
 
   }
 
-  function getAllTracks() {
+  function getAllTracks(userID) {
 
-    console.log("Getting all tracks!");
-    console.log(allTracksList);
+    //console.log("Getting all tracks!");
+    //console.log(allTracksList);
 
     var options = {
       url: 'https://api.spotify.com/v1/me/artist',
@@ -240,86 +284,104 @@ app.get('/get_hipster_score', function(req, res) {
 
     var TrackPromises = [];
 
-    for (index in allTracksList) {
-      console.log(index);
-      var tracks = allTracksList[index];
+    for (index in allTracksList[userID]) {
+
+      //console.log(index);
+      var tracks = allTracksList[userID][index];
       options['url'] = tracks.href;
 
       var TrackPromise = get(options);
 
       TrackPromises.push(TrackPromise.then(function (result) {
 
-        console.log("got a tracks result!!");
+        //console.log("got a tracks result!!");
 
 
         var tracks = result.items;
         for (index in tracks) {
           var track = tracks[index].track;
-          console.log(track);
-          trackScoreList.push(track.popularity);
+          //console.log(track);
+          trackScoreList[userID].push(track.popularity);
           for (index2 in track.artists) {
             var artist = track.artists[index2];
-            trackArtistList.push(artist.href);
+            if (trackArtistList[userID].indexOf(artist.href) < 0) {
+              trackArtistList[userID].push(artist.href);
+            }
           }
         }
       }));
     }
 
     Promise.all(TrackPromises).then(function(arrayOfResults) {
-      console.log("getting artists");
+      //console.log("getting artists");
 
-
-      getAllArtists();
-
-      /*var total = 0;
-      for (index in trackScoreList) {
-        total += trackScoreList[index];
-      }
-      total = 100 - total/trackScoreList.length;
-
-      res.send({
-        'score': total
-      });*/
+      getAllArtists(userID);
 
     });
 
-    console.log("reached end of func");
+    //console.log("reached end of func");
 
   }
 
 
-  function getAllPlaylists(options) {    
+  function getAllPlaylists(options, userID) {    
     var playlistsPromise = get(options);
 
     playlistsPromise.then(function (result) {
-      console.log(result);
+      //console.log("wow");
+      //console.log(result);
       var playlists = result.items;
       for (index in playlists) {
         var playlist = playlists[index];
-        console.log(playlist.tracks);
-        allTracksList.push(playlist.tracks);
+        //console.log(playlist.tracks);
+        allTracksList[userID].push(playlist.tracks);
       }
       if (result.next) {
         options['url'] = result.next;
-        return getAllPlaylists(options);
+        return getAllPlaylists(options, userID);
       } else {
-        getAllTracks();
+        //if (allTracksList.length > 1000) {
+        //  allTracksList = allTracksList.slice(0,1000);
+        //}
+        getAllTracks(userID);
       }
     });
 
     return playlistsPromise;
   }
 
+  userIDs = ["anthonylennon", "kieronjr", "kr1978", "1296741408", "osornios", "legcow", "stokedpepsi", "djelito", "niffle7", "12170982700", "12122592020", "rjvms", "miguelmarquez", "raoul95", "brenna_camille", "alisonwerder", "skillshot", "manakahofski", "rior_4", "sigoptic", "pedrofranca16", "caamich", "brianawills05", "harmonyjanay", "1215498199", "danyedidovich", "hietschb", "jray161", "bassman999", "ninami19", "kylobren", "imaustinjacobm", "atorres922", "testdummy1122", "judahg", "epicskate", "uuinsider", "soulamusic", "amendy", "garrett_carder", "rcerwin09", "izzie98", "tresand12", "lhmoore", "snowmk94", "danilions", "shengels", "cbmdlt", "sarauc28", "pjwpkm", "xka22", "niightmarez", "1249542388", "alibretz", "awalker88", "mikedurelli", "giruto", "wjtan123", "inesflacerda", "maham", "mansoa4", "laffysapphy", "stellar321", "murillocr", "sanson99", "downlucks", "deadsilence6", "tommyx25", "ashwhimp", "18athoreso", "mazthebows", "lesbiandraste", "rickvanmook", "ellengarfinkle", "dancer152636", "demi_1019", "leopold7777", "oliviafaas", "zseven1", "rebekahljw", "fridavictoria", "itsjustaphase", "freyerf", "adrianntorress", "julenekluth", "dale_family", "jtom69", "atmbomber", "jot_es", "o8iio", "aenikirk", "drinkxbleach", "q_bair", "jonathangaddis", "justeldrin", "d0llfface", "paytoncarver", "bkeirden", "fannsaw", "tony9401"];
 
-  userID = "me";
+  //["anthonylennon", "kieronjr", "kr1978", "1296741408", "osornios"];
 
-  var options = {
-    url: 'https://api.spotify.com/v1/me/playlists',
-    headers: { 'Authorization': 'Bearer ' + access_token },
-    json: true
-  };
+  //"legcow", "stokedpepsi", "djelito", "niffle7", "12170982700"
+  var callForUser = function (useridx) {
+    userID = userIDs[useridx];
 
-  var getPlaylistsPromise = getAllPlaylists(options);
+    console.log(userID);
+    allTracksList[userID] 
+    = [];
+    trackScoreList[userID] = [];
+    trackGenreDict[userID] = {};
+    trackArtistList[userID] = [];
+    trackArtistCountList[userID] = 0;
+    trackSepCountList[userID] = 0;
+
+    var options = {
+      url: 'https://api.spotify.com/v1/users/'+userID+'/playlists',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+
+    var getPlaylistsPromise = getAllPlaylists(options, userID);
+    
+    if (useridx+1 < userIDs.length) {
+      setTimeout(function(){ callForUser(useridx+1); }, 10000);
+    }
+
+  }
+
+  callForUser(0);
 
 
 });
