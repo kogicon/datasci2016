@@ -981,16 +981,16 @@ app.get('/callback', function(req, res) {
         function getAlbumTracksList(albumid) {
           options['url'] = "https://api.spotify.com/v1/albums/"+albumid+"/tracks";
           //console.log("sleeping");
-        
+          sleep(5000);
           var trackPromise = get(options);
          
           trackPromises.push(trackPromise.then(function (result){
-            sleep(1000);
+            
             tracks = result.items;
             albumTracksList = []
             for (index in tracks) {
               trackid = tracks[index].id;
-              //console.log("trackid: " + trackid);
+              console.log("trackid: " + trackid);
               //tracksIds.push(trackid);
                 //console.log("albumTracksList: " + albumTracksList)
               albumTracksList.push(trackid);
@@ -1466,6 +1466,7 @@ app.get('/get_basic_recommendations', function(req, res) {
       for (index in artists) {
         var artist = artists[index];
         topArtistList.push(artist);
+        topArtistDict[artist] = artist.popularity
       }
       if (result.next) {
         options['url'] = result.next;
