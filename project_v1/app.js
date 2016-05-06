@@ -1151,16 +1151,6 @@ app.get('/get_hipster_score', function(req, res) {
 
       ArtistPromises.push(ArtistPromise.then(function (result) {
 
-<<<<<<< HEAD
-        console.log("got an Artist result!!");
-        console.log(result);
-        console.log(result.genres.length)
-        for (index in result.genres) {
-          var genre = result.genres[index];
-          console.log("Genre! "+genre + " from " + result.name);
-          if (!genre in trackGenreDict) {
-            trackGenreDict[genre] = 0;
-=======
         //console.log("got an Artist result!!");
         //console.log(result);
 
@@ -1179,7 +1169,6 @@ app.get('/get_hipster_score', function(req, res) {
           }
           if (artist.genres.length == 0) {
             trackSepCountList[userID] += 1;
->>>>>>> 80945324d0aa141329d79cf5c6b75195c7b5a39e
           }
         }
 
