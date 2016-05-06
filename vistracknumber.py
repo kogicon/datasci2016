@@ -20,20 +20,39 @@ def normalizeAlbum(album):
             track['popularity'] = (track['popularity']-mean)/stdev
     return album
 
-filepath = "albumtotracks.txt"
+albumfilepath = "albumtotracks.txt"
 
-with open(filepath) as fileobj:
+with open(albumfilepath) as fileobj:
     data = simplejson.load(fileobj)
 
-fileobj.close()
+a2afilepath = "artisttoalbum.txt"
+
+with open(a2afilepath) as fileobj:
+    a2adata = simplejson.load(fileobj)
+
+a2popfilepath = "artisttopopularity.txt"
+
+with open(a2popfilepath) as fileobj:
+    a2popdata = simplejson.load(fileobj)
+
+artistdata = {}
+
+for artist in a2adata:
+    tracks = data[a2adata[artist]]
+    pop = a2popdata[artist]
+    artistdata[artist] = {'pop': pop, 'tracks': tracks}
+
+
 
 
 track_pop = []
 track_count = []
 
-for i in data:
-    #printAlbumInfo(data[i])
-    album = normalizeAlbum(data[i])
+for i in artistdata:
+    #print artistdata[i]
+    if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 00:
+        continue
+    album = normalizeAlbum(artistdata[i]['tracks'])
     for i in range(len(album)):
         if i == len(track_pop):
             track_pop.append(0)
@@ -53,11 +72,15 @@ ax = plt.figure().add_subplot(111)
 
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
+ax.set_title('Track # vs. Track Popularity for Spotify Artists')
+
 
 x = range(len(track_pop))
 width = 1/1.5
 
+
 plt.bar(x, track_pop, width, color="blue")
+plt.axes().set_xticks(map(lambda n: n, x))
 plt.show()
 
 '''
