@@ -55,15 +55,13 @@ track_count = []
 #minpop = 61
 #maxpop = 100
 
-adata = artistdata
+adata = artistdata.keys()[:]
 
 adata = random.sample(adata, 100)
 
 print adata
 
 for i in adata:
-    if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 50:
-        continue
     album = normalizeAlbum(artistdata[i]['tracks'])
     for i in range(len(album)):
         if i == len(track_pop):
@@ -95,47 +93,4 @@ plt.bar(x, track_pop, width, color="blue")
 plt.axes().set_xticks(map(lambda n: n, x))
 plt.show()
 
-'''
 
-
-colors = []
-
-hipmax = max(hipster_scores)
-hipmin = min(hipster_scores)
-
-for i in range(len(hipster_scores)):
-    xi = hipster_scores[i]
-    yi = (genres[i])/float(artist_counts[i])
-    coli = ((hipster_scores[i]-hipmin)/(hipmax-hipmin),0,0)
-    colors.append(coli)
-    x.append(xi)
-    y.append(yi)
-
-
-
-
-
-m, b = np.polyfit(x, y, 1)
-#print fitline
-fit = []
-
-for i in range(len(x)):
-    fit.append(m*x[i] + b)
-
-
-meany = sum(y)/float(len(y))
-
-SStot = 0
-SSres = 0
-for i in range(len(y)):
-    SStot += (y[i] - meany)**2
-    SSres += (y[i] - fit[i])**2
-
-r2 = 1 - SSres/float(SStot)
-
-print r2, SSres, SStot, meany
-
-plt.scatter(x, y, s=100, c=colors, alpha=0.5)
-plt.plot(x, fit, '-')
-plt.show()
-'''
