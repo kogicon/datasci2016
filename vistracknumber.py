@@ -88,7 +88,7 @@ for i in range(len(track_group)):
     for val in group:
         x.append(i+1)
         y.append(val)
-
+'''
 slope, intercept, rval, pval, stderr = stats.linregress(x, y)
 print "Slope:", slope
 print "intercept:", intercept
@@ -126,10 +126,10 @@ plt.scatter(x, y, s=10, alpha=0.1)
 plt.plot(x, fit, '-')
 plt.axes().set_xticks(map(lambda n: n, m))
 plt.show()
-
-
-
 '''
+
+
+
 for i in range(len(track_pop)):
     track_pop[i] = track_pop[i]/float(track_count[i])
     print i, track_pop[i], track_count[i]
@@ -139,17 +139,18 @@ ax = plt.figure().add_subplot(111)
 
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
-ax.set_title('Track # vs. Track Popularity w/ Regression Line')
+ax.set_title('Track # vs. Track Popularity for Spotify Artists')
 
 
-x = range(1,len(track_pop)+1)
+x = range(len(track_pop))
 width = 1/1.5
 
 
 plt.bar(x, track_pop, width, color="blue")
 plt.axes().set_xticks(map(lambda n: n, x))
+plt.axes().set_xticklabels(map(lambda n: str(n+1), x))
 plt.show()
-'''
+
 '''
 
 
