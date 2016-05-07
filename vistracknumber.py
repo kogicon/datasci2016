@@ -1,9 +1,10 @@
 import numpy as np
+from scipy import stats
 import matplotlib.pyplot as plt
 import json
 import simplejson
 import random
-
+import math
 
 def printAlbumInfo(album):
     for track in album:
@@ -20,6 +21,10 @@ def normalizeAlbum(album):
         else:
             track['popularity'] = (track['popularity']-mean)/stdev
     return album
+
+def tTest(samp_mean, samp_stdev, num_samp, exp_mean):
+    t = math.sqrt(num_samp)*(samp_mean-exp_mean)/samp_stdev
+    return t
 
 albumfilepath = "bigalbumtotracks.txt"
 
@@ -52,16 +57,12 @@ for artist in a2adata:
 
 track_pop = []
 track_count = []
+track_group = []
 #minpop = 61
 #maxpop = 100
 
-adata = artistdata
 
-adata = random.sample(adata, 100)
-
-print adata
-
-for i in adata:
+for i in artistdata:
     if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 50:
         continue
     album = normalizeAlbum(artistdata[i]['tracks'])
@@ -69,12 +70,66 @@ for i in adata:
         if i == len(track_pop):
             track_pop.append(0)
             track_count.append(0)
+            track_group.append([])
         track_pop[i] += album[i]['popularity']
         track_count[i] += 1
+        track_group[i].append(album[i]['popularity'])
+
+
+x = []
+
+y = []
+
+for i in range(len(track_group)):
+    group = track_group[i]
+    mean = np.mean(group)
+    stdev = np.std(group)    
+    print i, mean, stdev, len(group), tTest(mean, stdev, len(group), 0)
+    for val in group:
+        x.append(i+1)
+        y.append(val)
+
+slope, intercept, rval, pval, stderr = stats.linregress(x, y)
+print "Slope:", slope
+print "intercept:", intercept
+print "Rval:",rval
+print "r-squared:", rval**2
+print "Pval:",pval
+print "Stderr:",stderr
+fit = []
+
+for i in range(len(x)):
+    fit.append(slope*x[i] + intercept)
+
+
+meany = sum(y)/float(len(y))
+
+SStot = 0
+SSres = 0
+for i in range(len(y)):
+    SStot += (y[i] - meany)**2
+    SSres += (y[i] - fit[i])**2
+
+r2 = 1 - SSres/float(SStot)
+
+print r2, SSres, SStot, meany
+
+ax = plt.figure().add_subplot(111)
+
+ax.set_xlabel('Track #')
+ax.set_ylabel('Popularity of Track (STDEVs from mean)')
+ax.set_title('Track # vs. Track Popularity w/ Regression Line')
+
+m = range(1,21)
+
+plt.scatter(x, y, s=10, alpha=0.1)
+plt.plot(x, fit, '-')
+plt.axes().set_xticks(map(lambda n: n, m))
+plt.show()
 
 
 
-
+'''
 for i in range(len(track_pop)):
     track_pop[i] = track_pop[i]/float(track_count[i])
     print i, track_pop[i], track_count[i]
@@ -84,17 +139,17 @@ ax = plt.figure().add_subplot(111)
 
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
-ax.set_title('Track # vs. Track Popularity for Spotify Artists')
+ax.set_title('Track # vs. Track Popularity w/ Regression Line')
 
 
-x = range(len(track_pop))
+x = range(1,len(track_pop)+1)
 width = 1/1.5
 
 
 plt.bar(x, track_pop, width, color="blue")
 plt.axes().set_xticks(map(lambda n: n, x))
 plt.show()
-
+'''
 '''
 
 
