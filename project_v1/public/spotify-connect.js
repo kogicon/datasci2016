@@ -144,6 +144,8 @@ Aquires Login tokens from spotify and gets data
       });
     }, false);
 
+
+
     document.getElementById('get-hipster-score').addEventListener('click', function() {
       $.ajax({
         url: '/get_hipster_score',
@@ -151,6 +153,7 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
+
         var score = data.score;
         var genres = data.genres;
         console.log(data);
