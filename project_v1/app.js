@@ -54,6 +54,7 @@ var get = function(options) {
           resolve(body);
         } else {
           rejcount++;
+          console.log("status code: " + response.statusCode);
           console.log("REJECTING" + rejcount);
           //console.log(response);
           resolve({});
@@ -381,7 +382,8 @@ app.get('/get_basic_recommendations', function(req, res) {
     }
 
     Promise.all(RelatedPromises).then(function(arrayOfResults) {
-
+      topTrackDict = {}
+      topTrackPromises = []
       sum = 0;
       for (index in relatedArtistsCounts) {
         //console.log(relatedArtistsInfo[index].name);
@@ -402,22 +404,54 @@ app.get('/get_basic_recommendations', function(req, res) {
       recInfoList = [];
       for (var i = 0; i < recList.length; i++) {
         var artistID = recList[i];
-        recInfoList.push(relatedArtistsInfo[artistID]);
+        //console.log(relatedArtistsInfo[artistID])
+        
+        getTopTrack(artistID, topTrackDict, topTrackPromises);
+        
+       
+
+
         console.log(relatedArtistsInfo[artistID].name);
         console.log(relatedArtistsCounts[artistID]);
+        
       }
       
 
-      console.log("Finsihed printing all related artists!");
+      console.log("Finished printing all related artists!");
       console.log(sum);
-
-      res.send({
-        'items': recInfoList
+      Promise.all(topTrackPromises).then(function(){
+        //console.log(topTrackDict)
+      })
+      Promise.all(topTrackPromises).then(function() {
+        res.send({
+        'items': recInfoList,
+        'toptrack': topTrackDict
       });
+
+      })
+      
 
     });
 
     console.log("reached end of func");
+
+  }
+
+  function getTopTrack(artistID, topTrackDict, topTrackPromises) {
+
+    var options = {
+      url: 'https://api.spotify.com/v1/artists/'+artistID+'/top-tracks?country=US',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+    topTrackPromise = get(options);
+    topTrackPromises.push(topTrackPromise.then(function(result) {
+      var topTrack = result.tracks[0].uri;
+      topTrackDict[artistID] = topTrack
+
+    }));
+    recInfoList.push(relatedArtistsInfo[artistID]);
+    
 
   }
 

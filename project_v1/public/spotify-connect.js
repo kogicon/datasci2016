@@ -131,15 +131,22 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
+
         rec_artists = data.items;
-        console.log(rec_artists);
+        toptrackdict = data.toptrack;
+        console.log(toptrackdict)
+        //top_track_dict = data.top_track;
+        //console.log(top_track_dict);
+        //console.log(rec_artists);
         console.log("Nice!");
         recArtistPlaceholder.innerHTML = "";
         for (var i = 0; i < rec_artists.length; i++) {
+          console.log(rec_artists[i])
           var artist = rec_artists[i];
-          console.log("artist: " + artist);
+          var track = toptrackdict[artist.id]
           recArtistPlaceholder.innerHTML += recArtistTemplate({
-            artist: artist
+            artist: artist,
+            track: track
           });
         }
       });
