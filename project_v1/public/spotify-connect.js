@@ -44,6 +44,8 @@ Aquires Login tokens from spotify and gets data
       refresh_token = params.refresh_token,
       error = params.error;
 
+  var audio = new Audio();
+
   if (error) {
     alert('There was an error during the authentication');
   } else {
@@ -143,11 +145,15 @@ Aquires Login tokens from spotify and gets data
           console.log(rec_artists[i])
           var artist = rec_artists[i];
           var track = toptrackdict[artist.id]
+          
+          audio.src = track.preview_url;
+                    
           recArtistPlaceholder.innerHTML += recArtistTemplate({
             artist: artist,
             track: track.uri
           });
         }
+        audio.play();
         console.log(recommending);
       });
     }, false);
