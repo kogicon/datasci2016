@@ -133,7 +133,7 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
-
+        top_artists = data.artists;
         toptrackdict = data.toptrack;
         console.log(toptrackdict)
         rec_artists = data.info;
@@ -155,6 +155,79 @@ Aquires Login tokens from spotify and gets data
         }
         audio.play();
         console.log(recommending);
+        var dim = 1550;
+
+        var pack = d3.layout.pack()
+          .size([dim, dim])
+          .value(function(d) { return d.size; });
+
+        var svg = d3.select("#artist-viz").append("svg")
+          .attr("width", dim)
+          .attr("height", dim / 3);
+
+        var node = svg.selectAll(".node")
+          .attr("class", "node");
+
+        for (var i = 0; i < rec_artists.length; i++) {
+          var circ = svg.append("circle")
+            .attr("r", 125)
+            .attr("cx", (i + 1) * 300 - 160)
+            .attr("cy", 300)
+            .style("fill", "#5c1070");
+
+          var artist_stem = "https://api.spotify.com/v1/artists/";
+          var artist = artist_stem + rec_artists[i].id;
+
+          var to_split = rec_artists[i].name
+          if (to_split.substring(0, 22) == "Original Broadway Cast")
+            to_split = "OBC " + to_split.substring(23);
+
+          var split_name = to_split.split(" ");
+
+          for (var k = 0; k < split_name.length; k++) {
+            svg.append("text")
+              .attr("x", (i + 1) * 300 - 160)
+              .attr("y", 280 + 30 * k)
+              .attr("text-anchor", "middle")
+              .text(split_name[k])
+              .style("fill", "white")
+              .style("font-size", "24px")
+              .style("font-weight", "bold");
+          }
+        }
+
+        var artist_index = 0;
+        for (var i = 0; i < 25; i++) {
+          if (artist_index < top_artists.length) {
+            node.append("title")
+              .text(top_artists[i]);
+            var circ = svg.append("circle")
+              .attr("r", 33)
+              .attr("cx", (i + 1) * 70 - 30)
+              .attr("cy", 90)
+              .style("fill", "#102372");
+            
+            var artist_stem = "https://api.spotify.com/v1/artists/";
+            var artist = artist_stem + top_artists[artist_index].id;
+
+            var to_split = top_artists[artist_index]
+            if (to_split.substring(0, 22) == "Original Broadway Cast")
+              to_split = "OBC " + to_split.substring(23);
+
+            var split_name = to_split.split(" ");
+
+            for (var k = 0; k < split_name.length; k++) {
+              svg.append("text")
+                .attr("x", (i + 1) * 70 - 30)
+                .attr("y", 80 + 10 * k)
+                .attr("text-anchor", "middle")
+                .text(split_name[k])
+                .style("fill", "white")
+                .style("font-size", "10px");
+            }
+            artist_index++;
+         }
+        }
       });
     }, false);
 

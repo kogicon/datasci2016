@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>TrebleClef</title>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
       html {
@@ -89,7 +90,9 @@
         margin: .1em;
         width: auto;
       }
-
+      svg {
+        margin-left: -200px;
+      }
 
     </style>
   </head>
@@ -130,8 +133,9 @@
               <li><b>Spotify URL: (N/N)</b></li>
               <li><b>Related artists: (N/A)</b></li>
             </ul>
+          </div>
         </div>
-        </div>
+        <div id = "artist-viz"></div>
         <h2>Recommended Tracks</h2>
         <div id = "tracks">
           <img src = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQdqDKxQThpFkx2RRJrwX-ZNUBBj6a4V7RAhCa2__nJzr2XToaJ" />
