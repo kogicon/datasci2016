@@ -58,22 +58,32 @@ for artist in a2adata:
 track_pop = []
 track_count = []
 track_group = []
+all_track_pop = []
+all_track_num= []
 #minpop = 61
 #maxpop = 100
 
 
-for i in artistdata:
-    if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 50:
-        continue
-    album = normalizeAlbum(artistdata[i]['tracks'])
+for j in artistdata:
+    #if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 90:
+    #    continue
+    album = artistdata[j]['tracks']
     for i in range(len(album)):
         if i == len(track_pop):
             track_pop.append(0)
             track_count.append(0)
             track_group.append([])
         track_pop[i] += album[i]['popularity']
+        all_track_pop.append(artistdata[j]['tracks'][i]['popularity'])
+        all_track_num.append(i+1)
         track_count[i] += 1
         track_group[i].append(album[i]['popularity'])
+
+
+apop = [artistdata[i]['pop'] for i in artistdata]
+print "Artists", np.mean(apop), np.std(apop)
+print "Track num", np.mean(all_track_num), np.std(all_track_num)
+print "Track pop", np.mean(all_track_pop), np.std(all_track_pop)
 
 
 x = []
@@ -88,7 +98,7 @@ for i in range(len(track_group)):
     for val in group:
         x.append(i+1)
         y.append(val)
-'''
+
 slope, intercept, rval, pval, stderr = stats.linregress(x, y)
 print "Slope:", slope
 print "intercept:", intercept
@@ -113,6 +123,7 @@ for i in range(len(y)):
 r2 = 1 - SSres/float(SStot)
 
 print r2, SSres, SStot, meany
+print "numtracks!", len(x)
 
 ax = plt.figure().add_subplot(111)
 
@@ -139,7 +150,7 @@ ax = plt.figure().add_subplot(111)
 
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
-ax.set_title('Track # vs. Track Popularity for Spotify Artists')
+ax.set_title('Track # vs. Track Popularity for Spotify Artists w/ Pop')
 
 
 x = range(len(track_pop))
@@ -152,7 +163,7 @@ plt.axes().set_xticklabels(map(lambda n: str(n+1), x))
 plt.show()
 
 '''
-
+'''
 
 colors = []
 

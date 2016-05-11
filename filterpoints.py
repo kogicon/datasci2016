@@ -3,6 +3,16 @@ import matplotlib.pyplot as plt
 import json
 import simplejson
 from scipy import stats
+import math
+
+
+def correlation(n, sum_x, sum_y, sum_xx, sum_yy, sum_xy):
+    # http://en.wikipedia.org/wiki/Correlation_and_dependence
+    numerator = n * sum_xy - sum_x * sum_y
+    denominator = math.sqrt(n * sum_xx - sum_x * sum_x) * math.sqrt(n * sum_yy - sum_y * sum_y)
+    if denominator == 0:
+        return 0.0
+    return numerator / denominator
 
 userfilepath = "newuserwgenres.txt"
 
@@ -25,6 +35,13 @@ for userid in data:
     ungenres.append(user[2])
     artist_counts.append(user[3])
 
+
+
+print "AC", np.mean(artist_counts), np.std(artist_counts)
+print "genres", np.mean(genres), np.std(genres)
+print "hipster", np.mean(hipster_scores), np.std(hipster_scores)
+
+
 x = []
 
 y = []
@@ -35,14 +52,26 @@ hipmax = max(hipster_scores)
 hipmin = min(hipster_scores)
 
 for i in range(len(hipster_scores)):
+    if artist_counts[i] < 4:
+        yi = 0
+    else:
+        yi = (genres[i])/float(artist_counts[i])
     xi = hipster_scores[i]
-    yi = genres[i]+ungenres[i]
     coli = (0,(hipster_scores[i]-hipmin)/(hipmax-hipmin)*3/4,(hipster_scores[i]-hipmin)/(hipmax-hipmin)*3/4)
     colors.append(coli)
     x.append(xi)
     y.append(yi)
 
 
+
+n = len(x)
+sum_x = sum(x)
+sum_y = sum(y)
+sum_xx = sum(map(lambda b: b**2, x))
+sum_yy = sum(map(lambda b: b**2, y))
+sum_xy = sum([x[i]*y[i] for i in range(len(x))])
+
+print "CORRELATION SCORE:", correlation(n, sum_x, sum_y, sum_xx, sum_yy, sum_xy)
 
 
 
