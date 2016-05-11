@@ -338,10 +338,11 @@ app.get('/get_basic_recommendations', function(req, res) {
   
 
   var topArtistList = [];
-  topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
+  var topArtistDict = {};
+  /*topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
   topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c"});
   topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V"});
-  topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});
+  topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});*/
   
 
   var relatedArtistsCounts = {};
@@ -453,12 +454,16 @@ app.get('/get_basic_recommendations', function(req, res) {
   }
 
   function getTopArtists(options) {    
+
+    console.log("getting here");
     var topArtistsPromise = get(options);
 
     topArtistsPromise.then(function (result) {
       var artists = result.items;
+      console.log(artists)
       for (index in artists) {
         var artist = artists[index];
+        console.log(artist);
         topArtistList.push(artist);
         topArtistDict[artist] = artist.popularity
       }
