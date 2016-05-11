@@ -137,6 +137,7 @@ Aquires Login tokens from spotify and gets data
         recArtistPlaceholder.innerHTML = "";
         for (var i = 0; i < rec_artists.length; i++) {
           var artist = rec_artists[i];
+          console.log("artist: " + artist);
           recArtistPlaceholder.innerHTML += recArtistTemplate({
             artist: artist
           });
