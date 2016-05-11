@@ -328,24 +328,12 @@ app.get('/get_hipster_score', function(req, res) {
 
 app.get('/get_basic_recommendations', function(req, res) { 
 
-  console.log("getting basic recs");
-
   var access_token = req.query.access_token;
 
-  console.log(access_token);
-
-
-
-  
 
   var topArtistList = [];
   var topArtistDict = {};
-  /*topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
-  topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c"});
-  topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V"});
-  topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});*/
   
-
   var relatedArtistsCounts = {};
   var relatedArtistsInfo = {};
 
@@ -367,6 +355,7 @@ app.get('/get_basic_recommendations', function(req, res) {
       var id = artist.id;
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
       var RelatedPromise = get(options);
+<<<<<<< HEAD
       RelatedPromises.push(RelatedPromise.then(function (result) {
         var artists = result.artists;
         for (index in artists) {
@@ -375,10 +364,27 @@ app.get('/get_basic_recommendations', function(req, res) {
           if (!(artistid in relatedArtistsInfo)) {
             relatedArtistsInfo[artistid] = artist;
             relatedArtistsCounts[artistid] = 0;
+=======
+
+      RelatedPromises.push(RelatedPromise.then(function (artist) { return function (result) {
+
+        console.log("got a result!!");
+        console.log(result);
+
+        var artists = result.artists;
+        for (index in artists) {
+          var recartist = artists[index];
+          var recartistid = recartist.id;
+
+          if (!(recartistid in relatedArtistsInfo)) {
+            relatedArtistsInfo[recartistid] = recartist;
+            relatedArtistsCounts[recartistid] = [];
+>>>>>>> 52ee11831da91f7811d151f0b3d3251a65828d80
           }
-          relatedArtistsCounts[artistid] += 1;
+          relatedArtistsCounts[recartistid].push(artist);
         }
-      }));
+        console.log(relatedArtistsCounts);
+      }; }(artist)));
     }
 
     Promise.all(RelatedPromises).then(function(arrayOfResults) {
@@ -419,14 +425,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
       console.log("Finished printing all related artists!");
       console.log(sum);
-      Promise.all(topTrackPromises).then(function(){
-        //console.log(topTrackDict)
-      })
       Promise.all(topTrackPromises).then(function() {
         res.send({
         'items': recInfoList,
         'toptrack': topTrackDict
-      });
+        'recommend': relatedArtistsCounts
+
 
       })
       
@@ -464,7 +468,7 @@ app.get('/get_basic_recommendations', function(req, res) {
         if (recList.indexOf(index) <= -1 && artistsListened.indexOf(index) <= -1) {
           if (currMax == null) {
             currMax = index;
-          } else if (dict[currMax] < dict[index]) {
+          } else if (dict[currMax].length < dict[index].length) {
             currMax = index;
           }
         }
@@ -484,16 +488,29 @@ app.get('/get_basic_recommendations', function(req, res) {
 
     topArtistsPromise.then(function (result) {
       var artists = result.items;
+<<<<<<< HEAD
       for (index in artists) {
         var artist = artists[index];
+=======
+      //console.log(artists)
+      for (index in artists) {
+        var artist = artists[index];
+        //console.log(artist);
+>>>>>>> 52ee11831da91f7811d151f0b3d3251a65828d80
         topArtistList.push(artist);
-        topArtistDict[artist] = artist.popularity
+        topArtistDict[artist] = artist.popularity;
       }
       if (result.next) {
         options['url'] = result.next;
         return getTopArtists(options);
       } else {
         //console.log(topArtistList);
+        if (topArtistList.length == 0) {
+          topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
+          topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c"});
+          topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V"});
+          topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});
+        } 
         getAllRelatedArtists();
       }
     });

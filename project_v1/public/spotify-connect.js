@@ -131,6 +131,7 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
+<<<<<<< HEAD
 
         rec_artists = data.items;
         toptrackdict = data.toptrack;
@@ -138,6 +139,12 @@ Aquires Login tokens from spotify and gets data
         //top_track_dict = data.top_track;
         //console.log(top_track_dict);
         //console.log(rec_artists);
+=======
+        rec_artists = data.info;
+        recommending = data.recommend;
+
+        console.log(rec_artists);
+>>>>>>> 52ee11831da91f7811d151f0b3d3251a65828d80
         console.log("Nice!");
         recArtistPlaceholder.innerHTML = "";
         for (var i = 0; i < rec_artists.length; i++) {
@@ -149,6 +156,7 @@ Aquires Login tokens from spotify and gets data
             track: track
           });
         }
+        console.log(recommending);
       });
     }, false);
 
