@@ -45,6 +45,8 @@ Aquires Login tokens from spotify and gets data
       error = params.error;
 
   var audio = new Audio();
+  var audioTracks = {};
+  var audioPlay = -1;
 
   if (error) {
     alert('There was an error during the authentication');
@@ -154,20 +156,24 @@ Aquires Login tokens from spotify and gets data
         console.log(rec_artists);
         console.log("Nice!");
         recArtistPlaceholder.innerHTML = "";
+
+        audioTracks = {};
+        audioPlay = -1;
+
         for (var i = 0; i < rec_artists.length; i++) {
           console.log(rec_artists[i])
           var artist = rec_artists[i];
           var track = toptrackdict[artist.id];
           var imageurl = artist.images[2].url;
           
-          audio.src = track.preview_url;
+          audioTracks[artist.id] = track.preview_url;
                     
           recArtistPlaceholder.innerHTML += recArtistTemplate({
             artist: artist,
             track: track.uri
           });
         }
-        audio.play();
+        
         console.log(recommending);
 
         var dim = 1550;
@@ -185,6 +191,33 @@ Aquires Login tokens from spotify and gets data
 
         var defs = svg.append('svg:defs');
 
+        defs.append("svg:pattern")
+            .attr("id", "play")
+            .attr("width", 40)
+            .attr("height", 40)
+            .attr("x", 0)
+            .attr("y", 0)
+            .append("svg:image")
+            .attr("xlink:href", "http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-40678-512px.png")
+            .attr("width", 40)
+            .attr("height", 40)
+            .attr("x", 0)
+            .attr("y", 0);
+
+        defs.append("svg:pattern")
+            .attr("id", "stop")
+            .attr("width", 40)
+            .attr("height", 40)
+            .attr("x", 0)
+            .attr("y", 0)
+            .append("svg:image")
+            .attr("xlink:href", "https://image.freepik.com/free-icon/stop-button_318-11112.jpg")
+            .attr("width", 40)
+            .attr("height", 40)
+            .attr("x", 0)
+            .attr("y", 0);
+
+
         for (var i = 0; i < rec_artists.length; i++) {
 
           var artist = rec_artists[i];
@@ -195,6 +228,8 @@ Aquires Login tokens from spotify and gets data
             .attr("id", artist.id)
             .attr("width", 200)
             .attr("height", 200)
+            .attr("x", (i + 1) * 50 - 100)
+            .attr("y", 0)
             .attr("patternUnits", "userSpaceOnUse")
             .append("svg:image")
             .attr("xlink:href", imageurl)
@@ -204,8 +239,9 @@ Aquires Login tokens from spotify and gets data
             .attr("y", 0);
 
           var circ = svg.append("circle")
+            //.attr("class", artist.id)
             .attr("r", 100)
-            .attr("cx", (i + 1) * 200 + 100)
+            .attr("cx", (i + 1) * 250)
             .attr("cy", 200+100)
             .style("stroke", "black")  
             .style("stroke-width", 0.25)
@@ -213,13 +249,49 @@ Aquires Login tokens from spotify and gets data
             .style("fill", "url(#"+artist.id+")");
 
           var circ2 = svg.append("circle")
-            .attr("r", 40)
-            .attr("cx", (i + 1) * 200 + 100)
-            .attr("cy", 200+100+140)
+            .attr("id", artist.id+"_play")
+            .attr("class", artist.id)
+            .attr("r", 20)
+            .attr("cx", (i + 1) * 250)
+            .attr("cy", 200+100+120)
             .style("stroke", "black")  
-            .style("stroke-width", 0.25);
-            //.style("fill", "#666");
-            //.style("fill", "url(#"+artist.id+")");
+            .style("stroke-width", 0.25)
+            .style("fill","url(#play)")
+            .on("mouseover", function(){
+               d3.select(this)
+                   .style("stroke-width", 0.75);
+            })
+            .on("mouseout", function(){ 
+               d3.select(this)
+                   .style("stroke-width", 0.25);
+            })
+            .on("click", function(){
+
+                var curr = d3.select(this);
+                console.log(curr.attr("class"));
+                console.log(audioTracks[curr.attr("class")]);
+                if (audioPlay == curr) {
+                  console.log("my song is playing!");
+                  audio.pause();
+                  audioPlay = -1;
+                  curr.style("fill","url(#play)");
+                } else {
+                  if (audioPlay != -1) {
+                    audioPlay
+                      .style("fill","url(#play)");
+                  }
+
+                  console.log("my song is being loaded!");
+                  //audio.pause();
+                  audio.src = audioTracks[curr.attr("class")];
+                  audio.play();
+                  audioPlay = curr;
+                  curr.style("fill","url(#stop)")
+                  setTimeout(function(curr) { return function() { curr.style("fill","url(#play)"); } }(curr), 30000);
+                }
+                
+
+            });
           
 
           /*var circ = svg.append("image")
@@ -241,7 +313,7 @@ Aquires Login tokens from spotify and gets data
 
           for (var k = 0; k < split_name.length; k++) {
             svg.append("text")
-              .attr("x", (i + 1) * 200 + 100)
+              .attr("x", (i + 1) * 250)
               .attr("y", 280 + 30 * k)
               .attr("text-anchor", "middle")
               .text(split_name[k])
