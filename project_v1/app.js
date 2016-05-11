@@ -427,7 +427,7 @@ app.get('/get_basic_recommendations', function(req, res) {
       console.log(sum);
       Promise.all(topTrackPromises).then(function() {
         res.send({
-        'items': recInfoList,
+        'info': recInfoList,
         'toptrack': topTrackDict
         'recommend': relatedArtistsCounts
 
@@ -450,7 +450,7 @@ app.get('/get_basic_recommendations', function(req, res) {
     };
     topTrackPromise = get(options);
     topTrackPromises.push(topTrackPromise.then(function(result) {
-      var topTrack = result.tracks[0].uri;
+      var topTrack = result.tracks[0];
       topTrackDict[artistID] = topTrack
 
     }));
