@@ -1,106 +1,18 @@
 <!doctype html>
 <html>
   <head>
-    <title>TrebleClef</title>
+    <title>TrebleClef </title>
     <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style type="text/css">
-      html {
-        margin-left: 10px;
-        padding: 10px;
-      }
-
-      #artists, #tracks {
-        margin-bottom: 130px;
-      }
-
-      #artists img, #tracks img, .placeholder-img {
-        width: 100px;
-        height: 100px;
-        float: left;
-      }
-
-      #artists ul, #tracks ul {
-        list-style-type: none;
-        float: left;
-      }
-
-      #login, #loggedin {
-        display: none;
-      }
-
-      #playlists {
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 10px;
-        width: 90%;
-      }
-
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-
-      .artist img {
-        height: 150px;
-        float: left;
-      }
-
-      .artist ul {
-        list-style-type: none;
-        float: left;
-      }
-
-      .artist {
-        position: relative;
-        width: 100%;
-        height: 170px;
-      }
-
-      .bigText {
-        font-size: 48px;
-        font-weight: 700;
-      }
-
-      .red {
-        color: #CF000F;
-      }
-
-      .white {
-        color: white;
-      }
-
-      .redBack {
-        background-color: #CF000F;
-      }
-
-      .purpleBack {
-        background-color: #8870FF;
-      }
-
-      .callToAction {
-        border-radius: 1em;
-        padding: .1em;
-        margin: .3em;
-        width: auto;
-      }
-      .callToAction > h1 {
-        margin: .1em;
-        width: auto;
-      }
-      svg {
-        margin-left: -200px;
-      }
-
-    </style>
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
   </head>
 
   <body>
 
     <div class="container">
-      <h1>TrebleClef Music Recommendation Engine</h1>
+      <h1 id="title">TrebleClef Music Engine</h1>
       <div id="login">
         <center>
           <a href="login" class="btn btn-primary">Log in with Spotify</a>
@@ -112,10 +24,12 @@
         <div id="oauth">
         </div>
 
+        
         <center>
           <button class="btn btn-primary" id="get-basic-recommendations">Get Basic Recommendations</button>
           <button class="btn btn-primary" id="get-hipster-score">Get Hipster Score</button>
         </center>
+    
 
 
         <div id="score-view">
@@ -136,7 +50,8 @@
           </div>
         </div>
         <div id = "artist-viz"></div>
-        <h2>Recommended Tracks</h2>
+        <br><br><br>
+        <!--<h2>Recommended Tracks</h2>
         <div id = "tracks">
           <img src = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQdqDKxQThpFkx2RRJrwX-ZNUBBj6a4V7RAhCa2__nJzr2XToaJ" />
           <ul>
@@ -145,7 +60,8 @@
             <li><b>Track's audio features:</b></li>
             <li><b>Related tracks:</b></li>
           </ul>
-        </div>
+        </div>-->
+
       </div>
     </div>
 
@@ -163,8 +79,8 @@
     </script>
 
     <script id="hipster-score-template" type="text/x-handlebars-template">
-      <center><div class="callToAction redBack"><h1 class="bigText white">Hipster Score: {{score}}</h1></div></center>
-      <center><div class="callToAction purpleBack"><h1 class="bigText white">#Genres: {{genres}}</h1></div></center>
+      <div class="callToAction Score"><h1 class="bigText white">Hipster Score: {{score}}%</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">#Genres: {{genres}}</h1></div>
     </script>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
@@ -174,13 +90,8 @@
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-            <dt></dt><dd><button class="btn btn-default" id="obtain-new-token">Obtain new token</button></dd>
+            <h3>Name: <span style="font-weight:300;">{{display_name}}</span></h3>
+            <h3>Id: <span style="font-weight:300;">{{id}}</span></h3>
           </dl>
         </div>
       </div>
@@ -200,4 +111,13 @@
     <script src="spotify-connect.js"></script>
     
 </html>
+
+<!--  Cut Text 
+  inside script, dl-horizontal
+  </dt>Email</dt><dd>{{email}}</dd>
+            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+            <dt>Country</dt><dd>{{country}}</dd>
+            <dt></dt><dd><button class="btn btn-default" id="obtain-new-token">Obtain new token</button></dd> 
+-->
 

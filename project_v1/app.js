@@ -488,21 +488,13 @@ app.get('/get_basic_recommendations', function(req, res) {
         //console.log(relatedArtistsCounts[artistID]);
         
       }
-
-      var topArtistNames = []
-      for (var i = 0; i < topArtistList.length; i++) {
-        var name = topArtistList[i].name;
-        if (name != null) {
-          topArtistNames.push(name);
-        }
-      }  
       
 
       console.log("Finished printing all related artists!");
       //console.log(sum);
       Promise.all(topTrackPromises).then(function() {
         res.send({
-        'artists': topArtistNames,
+        'artists': topArtistList,
         'info': recInfoList,
         'toptrack': topTrackDict,
         'recommend': relatedArtistsCounts
