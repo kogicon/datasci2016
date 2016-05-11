@@ -6,105 +6,13 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!--
-    <style type="text/css">
-      html {
-        margin-left: 10px;
-        padding: 10px;
-      }
-
-      #artists, #tracks {
-        margin-bottom: 130px;
-      }
-
-      #artists img, #tracks img, .placeholder-img {
-        width: 100px;
-        height: 100px;
-        float: left;
-      }
-
-      #artists ul, #tracks ul {
-        list-style-type: none;
-        float: left;
-      }
-
-      #login, #loggedin {
-        display: none;
-      }
-
-      #playlists {
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 10px;
-        width: 90%;
-      }
-
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-
-      .artist img {
-        height: 150px;
-        float: left;
-      }
-
-      .artist ul {
-        list-style-type: none;
-        float: left;
-      }
-
-      .artist {
-        position: relative;
-        width: 100%;
-        height: 170px;
-      }
-
-      .bigText {
-        font-size: 48px;
-        font-weight: 700;
-      }
-
-      .red {
-        color: #CF000F;
-      }
-
-      .white {
-        color: white;
-      }
-
-      .redBack {
-        background-color: #CF000F;
-      }
-
-      .purpleBack {
-        background-color: #8870FF;
-      }
-
-      .callToAction {
-        border-radius: 1em;
-        padding: .1em;
-        margin: .3em;
-        width: auto;
-      }
-      .callToAction > h1 {
-        margin: .1em;
-        width: auto;
-      }
-      svg {
-        margin-left: -200px;
-      }
-
-    </style>
-  -->
+    
   </head>
 
   <body>
 
     <div class="container">
-      <h1 id="title">TrebleClef Music Recommendation Engine</h1>
+      <h1 id="title">TrebleClef Music Engine</h1>
       <div id="login">
         <center>
           <a href="login" class="btn btn-primary">Log in with Spotify</a>
@@ -142,7 +50,8 @@
           </div>
         </div>
         <div id = "artist-viz"></div>
-        <h2>Recommended Tracks</h2>
+        <br><br><br>
+        <!--<h2>Recommended Tracks</h2>
         <div id = "tracks">
           <img src = "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQdqDKxQThpFkx2RRJrwX-ZNUBBj6a4V7RAhCa2__nJzr2XToaJ" />
           <ul>
@@ -151,7 +60,8 @@
             <li><b>Track's audio features:</b></li>
             <li><b>Related tracks:</b></li>
           </ul>
-        </div>
+        </div>-->
+
       </div>
     </div>
 
@@ -180,10 +90,8 @@
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
-            <dt>Name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Login Id</dt><dd>{{id}}</dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-            
+            <h3>Name: <span style="font-weight:300;">{{display_name}}</span></h3>
+            <h3>Id: <span style="font-weight:300;">{{id}}</span></h3>
           </dl>
         </div>
       </div>
