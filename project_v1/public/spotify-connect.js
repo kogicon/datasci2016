@@ -131,7 +131,9 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
-        rec_artists = data.items;
+        rec_artists = data.info;
+        recommending = data.recommend;
+
         console.log(rec_artists);
         console.log("Nice!");
         recArtistPlaceholder.innerHTML = "";
@@ -142,6 +144,7 @@ Aquires Login tokens from spotify and gets data
             artist: artist
           });
         }
+        console.log(recommending);
       });
     }, false);
 
