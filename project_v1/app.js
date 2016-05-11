@@ -183,23 +183,31 @@ app.get('/get_hipster_score', function(req, res) {
     var ArtistPromises = [];
     //console.log(trackArtistLi)
     var length = trackArtistList[userID].length
-    if (length > 600) {
+    /*if (length > 600) {
       trackArtistList[userID] = trackArtistList[userID].slice(0, 600);
     }
     else {
       trackArtistList[userID] = trackArtistList[userID].slice(0, customFloor(trackArtistList[userID].length, 50));
-    }
+    }*/
 
     console.log("length: " + trackArtistList[userID].length)
     for (var index = 0; index < trackArtistList[userID].length; index+=50) {
       var ids = "";
-      for (var j = index; j < parseInt(index) + 50; j++) {
+      var upperBound;
+      if (index + 50 < trackArtistList[userID].length) {
+        upperBound = index + 50;
+      }
+      else {
+        upperBound = trackArtistList[userID].length;
+      }
+      //console.log("upperbound: " + upperBound);
+      for (var j = index; j < upperBound; j++) {
         //console.log("j: " + j)
 
-        /*if (j > trackArtistList[userID].length) {
+        if (j > trackArtistList[userID].length) {
           console.log("breaking");
           break;
-        }*/
+        }
         var sp = trackArtistList[userID][j].split("/");
   
         //console.log("j+1: " + parseInt(j+1));
@@ -264,12 +272,12 @@ app.get('/get_hipster_score', function(req, res) {
       sortable.sort(function(a, b) {return b[1] - a[1]})
       //console.log(sortable);
       for (var artist in artistPopularityDict) {
-        console.log(artist, artistPopularityDict[artist])
+        //console.log(artist, artistPopularityDict[artist])
         sortable2.push([artist, artistPopularityDict[artist]])
       }
 
       sortable2.sort(function(a, b) {return b[1] - a[1]})
-      console.log(sortable2);
+      //console.log(sortable2);
       console.log("Your most listened to genre is: " + sortable[0][0])
       console.log("You listen to these genres: " + Object.keys(trackGenreDict[userID]))
       console.log("Your most popular artist is: " + sortable2[0][0])
@@ -285,7 +293,11 @@ app.get('/get_hipster_score', function(req, res) {
 
       res.send({
         'score': total,
-        'genres': trackGenreDict[userID]
+        'genres': trackGenreDict[userID],
+        'mostlistengenre': sortable[0][0],
+        'genres': Object.keys(trackGenreDict[userID]),
+        'popartist': sortable2[0][0],
+        'obscureartist': sortable2[sortable2.length - 1][0]
       });
 
     });
@@ -306,12 +318,7 @@ app.get('/get_hipster_score', function(req, res) {
 
     var TrackPromises = [];
     //console.log(allTracksList[userID])
-    var numtracks = 0;
-    for (index in allTracksList[userID]) {
-      numtracks += parseInt(allTracksList[userID][index].total);
-    }
-    console.log("numtracks: " + numtracks);
-    console.log(allTracksList[userID])
+
     for (index in allTracksList[userID]) {
 
       var tracks = allTracksList[userID][index];
