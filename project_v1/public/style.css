@@ -16,6 +16,11 @@ html {
         color: #23cf5f;
       }
 
+      iframe {
+        float: right;
+        margin-top: 25px;
+      }
+
 
       .artist, #tracks {
         /*margin-bottom: 130px;*/
