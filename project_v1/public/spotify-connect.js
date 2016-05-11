@@ -207,6 +207,7 @@ Aquires Login tokens from spotify and gets data
             .attr("r", 100)
             .attr("cx", (i + 1) * 200 + 100)
             .attr("cy", 200+100)
+            .attr("id", rec_artists[i].name.split(' ').join('').replace(".",""))
             .style("stroke", "black")  
             .style("stroke-width", 0.25)
             .style("fill", "#666")
@@ -256,16 +257,14 @@ Aquires Login tokens from spotify and gets data
         for (var i = 0; i < 25; i++) {
           if (artist_index < top_artists.length) {
             node.append("title")
-              .text(top_artists[i]);
+              .text(top_artists[i].id);
             var circ = svg.append("circle")
               .attr("r", 33)
               .attr("cx", (i + 1) * 70 - 30)
               .attr("cy", 90)
+              .attr("id", top_artists[artist_index].split(' ').join('').replace(".",""))
               .style("fill", "#102372");
             
-            var artist_stem = "https://api.spotify.com/v1/artists/";
-            var artist = artist_stem + top_artists[artist_index].id;
-
             var to_split = top_artists[artist_index]
             if (to_split.substring(0, 22) == "Original Broadway Cast")
               to_split = "OBC " + to_split.substring(23);
@@ -283,6 +282,23 @@ Aquires Login tokens from spotify and gets data
             }
             artist_index++;
          }
+        }
+
+        for (var key in recommending) {
+          for (var i = 0; i < rec_artists.length; i++) {
+            if (key == rec_artists[i].id) {
+              for (var j = 0; j < key.length; j++) {
+                svg.append('line')
+                  .attr("stroke", "black")
+                  .attr("stroke-width", "2px")
+                  .attr("x1", d3.select("#"+rec_artists[i].name.split(' ').join('').replace(".", '')).attr("cx"))
+                  .attr("y1", d3.select("#"+rec_artists[i].name.split(' ').join('').replace(".", '')).attr("cy") - 100)
+                  .attr("x2", d3.select("#"+recommending[key][j].name.split(' ').join('').replace(".", '')).attr("cx"))
+                  .attr("y2", 123)
+                break;
+              }
+            }
+          }
         }
 
       });
