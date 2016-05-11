@@ -578,10 +578,10 @@ app.get('/get_basic_recommendations', function(req, res) {
       } else {
         //console.log(topArtistList);
         if (topArtistList.length == 0) {
-          topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr"});
-          topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c"});
-          topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V"});
-          topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb"});
+          topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr", "name":"Hello"});
+          topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c", "name":"Hello1"});
+          topArtistList.push({"id":"4M5nCE77Qaxayuhp3fVn4V", "name":"Hello2"});
+          topArtistList.push({"id":"4EVpmkEwrLYEg6jIsiPMIb", "name":"Hello3"});
         } 
         getAllRelatedArtists();
       }
