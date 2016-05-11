@@ -315,6 +315,7 @@ Aquires Login tokens from spotify and gets data
       }).done(function(data) {
 
         var score = data.score;
+        score = score.toFixed(2);
         var genres = data.genres;
         console.log(data);
         hipsterScorePlaceholder.innerHTML = hipsterScoreTemplate({
