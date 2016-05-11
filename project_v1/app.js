@@ -357,22 +357,13 @@ app.get('/get_basic_recommendations', function(req, res) {
     for (index in topArtistList) {
       var artist = topArtistList[index];
       var id = artist.id;
-
-      console.log(id);
-
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
-
       var RelatedPromise = get(options);
-
       RelatedPromises.push(RelatedPromise.then(function (result) {
-
-        console.log("got a result!!");
-
         var artists = result.artists;
         for (index in artists) {
           var artist = artists[index];
           var artistid = artist.id;
-
           if (!(artistid in relatedArtistsInfo)) {
             relatedArtistsInfo[artistid] = artist;
             relatedArtistsCounts[artistid] = 0;
@@ -448,15 +439,12 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   function getTopArtists(options) {    
 
-    console.log("getting here");
     var topArtistsPromise = get(options);
 
     topArtistsPromise.then(function (result) {
       var artists = result.items;
-      console.log(artists)
       for (index in artists) {
         var artist = artists[index];
-        console.log(artist);
         topArtistList.push(artist);
         topArtistDict[artist] = artist.popularity
       }
