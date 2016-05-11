@@ -196,8 +196,7 @@ app.get('/get_hipster_score', function(req, res) {
       var ArtistPromise = get(options);
 
       ArtistPromises.push(ArtistPromise.then(function (result) {
-
-
+       
         for (artistidx in result.artists) {
           var artist = result.artists[artistidx];
 
@@ -231,7 +230,7 @@ app.get('/get_hipster_score', function(req, res) {
 
       res.send({
         'score': total,
-        'genres': Object.keys(trackGenreDict[userID]).length
+        'genres': trackGenreDict[userID]
       });
 
     });
@@ -282,7 +281,8 @@ app.get('/get_hipster_score', function(req, res) {
   }
 
 
-  function getAllPlaylists(options, userID) {    
+  function getAllPlaylists(options, userID) {   
+
     var playlistsPromise = get(options);
 
     playlistsPromise.then(function (result) {
@@ -305,6 +305,15 @@ app.get('/get_hipster_score', function(req, res) {
   
     userID = "me";
 
+    console.log(userID);
+    allTracksList[userID] 
+    = [];
+    trackScoreList[userID] = [];
+    trackGenreDict[userID] = {};
+    trackArtistList[userID] = [];
+    trackArtistCountList[userID] = 0;
+    trackSepCountList[userID] = 0;
+
     var options = {
       url: 'https://api.spotify.com/v1/me/playlists',
       headers: { 'Authorization': 'Bearer ' + access_token },
@@ -312,8 +321,6 @@ app.get('/get_hipster_score', function(req, res) {
     };
 
     var getPlaylistsPromise = getAllPlaylists(options, userID);
-
-
 
 });
 
