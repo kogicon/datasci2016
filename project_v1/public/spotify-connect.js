@@ -272,7 +272,7 @@ Aquires Login tokens from spotify and gets data
                 var curr = d3.select(this);
                 console.log(curr.attr("class"));
                 console.log(audioTracks[curr.attr("class")]);
-                if (audioPlay == curr) {
+                if (audioPlay != -1 && audioPlay.attr("id") == curr.attr("id")) {
                   console.log("my song is playing!");
                   audio.pause();
                   audioPlay = -1;
