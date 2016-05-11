@@ -133,9 +133,22 @@ Aquires Login tokens from spotify and gets data
           'access_token': access_token
         }
       }).done(function(data) {
-        top_artists = data.artists;
+        top_artists_info = data.artists;
+
+
+        var top_artists = []
+        for (var i = 0; i < top_artists_info.length; i++) {
+          var name = top_artists_info[i].name;
+          if (name != null) {
+            top_artists.push(name);
+          }
+        }  
+        console.log("Top name!");
+        console.log(top_artists_info);
+        console.log(top_artists);
+
         toptrackdict = data.toptrack;
-        console.log(toptrackdict)
+        console.log(toptrackdict);
         rec_artists = data.info;
         recommending = data.recommend;
         console.log(rec_artists);
@@ -144,7 +157,8 @@ Aquires Login tokens from spotify and gets data
         for (var i = 0; i < rec_artists.length; i++) {
           console.log(rec_artists[i])
           var artist = rec_artists[i];
-          var track = toptrackdict[artist.id]
+          var track = toptrackdict[artist.id];
+          var imageurl = artist.images[2].url;
           
           audio.src = track.preview_url;
                     
@@ -155,6 +169,7 @@ Aquires Login tokens from spotify and gets data
         }
         audio.play();
         console.log(recommending);
+
         var dim = 1550;
 
         var pack = d3.layout.pack()
@@ -168,12 +183,52 @@ Aquires Login tokens from spotify and gets data
         var node = svg.selectAll(".node")
           .attr("class", "node");
 
+        var defs = svg.append('svg:defs');
+
         for (var i = 0; i < rec_artists.length; i++) {
+
+          var artist = rec_artists[i];
+          var track = toptrackdict[artist.id];
+          var imageurl = artist.images[2].url;
+
+          defs.append("svg:pattern")
+            .attr("id", artist.id)
+            .attr("width", 200)
+            .attr("height", 200)
+            .attr("patternUnits", "userSpaceOnUse")
+            .append("svg:image")
+            .attr("xlink:href", imageurl)
+            .attr("width", 200)
+            .attr("height", 200)
+            .attr("x", 0)
+            .attr("y", 0);
+
           var circ = svg.append("circle")
-            .attr("r", 125)
-            .attr("cx", (i + 1) * 300 - 160)
-            .attr("cy", 300)
-            .style("fill", "#5c1070");
+            .attr("r", 100)
+            .attr("cx", (i + 1) * 200 + 100)
+            .attr("cy", 200+100)
+            .style("stroke", "black")  
+            .style("stroke-width", 0.25)
+            .style("fill", "#666")
+            .style("fill", "url(#"+artist.id+")");
+
+          var circ2 = svg.append("circle")
+            .attr("r", 40)
+            .attr("cx", (i + 1) * 200 + 100)
+            .attr("cy", 200+100+140)
+            .style("stroke", "black")  
+            .style("stroke-width", 0.25);
+            //.style("fill", "#666");
+            //.style("fill", "url(#"+artist.id+")");
+          
+
+          /*var circ = svg.append("image")
+            .attr("xlink:href", imageurl)
+            .attr("x", (i + 1) * 300 - 160 - 100)
+            .attr("y", 300 - 100)
+            .attr("width", 200)
+            .attr("height", 200)
+            .style("border-radius","5em");*/
 
           var artist_stem = "https://api.spotify.com/v1/artists/";
           var artist = artist_stem + rec_artists[i].id;
@@ -186,13 +241,14 @@ Aquires Login tokens from spotify and gets data
 
           for (var k = 0; k < split_name.length; k++) {
             svg.append("text")
-              .attr("x", (i + 1) * 300 - 160)
+              .attr("x", (i + 1) * 200 + 100)
               .attr("y", 280 + 30 * k)
               .attr("text-anchor", "middle")
               .text(split_name[k])
               .style("fill", "white")
               .style("font-size", "24px")
-              .style("font-weight", "bold");
+              .style("font-weight", "bold")
+              .style("text-shadow", "0 0 20px #000");
           }
         }
 
@@ -228,6 +284,7 @@ Aquires Login tokens from spotify and gets data
             artist_index++;
          }
         }
+
       });
     }, false);
 
