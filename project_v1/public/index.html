@@ -1,9 +1,12 @@
 <!doctype html>
 <html>
   <head>
-    <title>TrebleClef</title>
+    <title>TrebleClef </title>
     <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!--
     <style type="text/css">
       html {
         margin-left: 10px;
@@ -95,12 +98,13 @@
       }
 
     </style>
+  -->
   </head>
 
   <body>
 
     <div class="container">
-      <h1>TrebleClef Music Recommendation Engine</h1>
+      <h1 id="title">TrebleClef Music Recommendation Engine</h1>
       <div id="login">
         <center>
           <a href="login" class="btn btn-primary">Log in with Spotify</a>
@@ -112,10 +116,12 @@
         <div id="oauth">
         </div>
 
+        
         <center>
           <button class="btn btn-primary" id="get-basic-recommendations">Get Basic Recommendations</button>
           <button class="btn btn-primary" id="get-hipster-score">Get Hipster Score</button>
         </center>
+    
 
 
         <div id="score-view">
@@ -163,8 +169,8 @@
     </script>
 
     <script id="hipster-score-template" type="text/x-handlebars-template">
-      <center><div class="callToAction redBack"><h1 class="bigText white">Hipster Score: {{score}}</h1></div></center>
-      <center><div class="callToAction purpleBack"><h1 class="bigText white">#Genres: {{genres}}</h1></div></center>
+      <div class="callToAction Score"><h1 class="bigText white">Hipster Score: {{score}}%</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">#Genres: {{genres}}</h1></div>
     </script>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
@@ -174,13 +180,10 @@
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+            <dt>Name</dt><dd class="clearfix">{{display_name}}</dd>
+            <dt>Login Id</dt><dd>{{id}}</dd>
             <dt>Country</dt><dd>{{country}}</dd>
-            <dt></dt><dd><button class="btn btn-default" id="obtain-new-token">Obtain new token</button></dd>
+            
           </dl>
         </div>
       </div>
@@ -200,4 +203,13 @@
     <script src="spotify-connect.js"></script>
     
 </html>
+
+<!--  Cut Text 
+  inside script, dl-horizontal
+  </dt>Email</dt><dd>{{email}}</dd>
+            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
+            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
+            <dt>Country</dt><dd>{{country}}</dd>
+            <dt></dt><dd><button class="btn btn-default" id="obtain-new-token">Obtain new token</button></dd> 
+-->
 
