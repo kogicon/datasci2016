@@ -355,16 +355,7 @@ app.get('/get_basic_recommendations', function(req, res) {
       var id = artist.id;
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
       var RelatedPromise = get(options);
-<<<<<<< HEAD
-      RelatedPromises.push(RelatedPromise.then(function (result) {
-        var artists = result.artists;
-        for (index in artists) {
-          var artist = artists[index];
-          var artistid = artist.id;
-          if (!(artistid in relatedArtistsInfo)) {
-            relatedArtistsInfo[artistid] = artist;
-            relatedArtistsCounts[artistid] = 0;
-=======
+
 
       RelatedPromises.push(RelatedPromise.then(function (artist) { return function (result) {
 
@@ -379,7 +370,6 @@ app.get('/get_basic_recommendations', function(req, res) {
           if (!(recartistid in relatedArtistsInfo)) {
             relatedArtistsInfo[recartistid] = recartist;
             relatedArtistsCounts[recartistid] = [];
->>>>>>> 52ee11831da91f7811d151f0b3d3251a65828d80
           }
           relatedArtistsCounts[recartistid].push(artist);
         }
@@ -428,18 +418,20 @@ app.get('/get_basic_recommendations', function(req, res) {
       Promise.all(topTrackPromises).then(function() {
         res.send({
         'info': recInfoList,
-        'toptrack': topTrackDict
+        'toptrack': topTrackDict,
         'recommend': relatedArtistsCounts
 
 
-      })
+        })
       
 
-    });
+      });
+
 
     console.log("reached end of func");
+    });
 
-  }
+  };
 
   function getTopTrack(artistID, topTrackDict, topTrackPromises) {
 
@@ -488,15 +480,10 @@ app.get('/get_basic_recommendations', function(req, res) {
 
     topArtistsPromise.then(function (result) {
       var artists = result.items;
-<<<<<<< HEAD
-      for (index in artists) {
-        var artist = artists[index];
-=======
-      //console.log(artists)
+
       for (index in artists) {
         var artist = artists[index];
         //console.log(artist);
->>>>>>> 52ee11831da91f7811d151f0b3d3251a65828d80
         topArtistList.push(artist);
         topArtistDict[artist] = artist.popularity;
       }
@@ -521,7 +508,7 @@ app.get('/get_basic_recommendations', function(req, res) {
       url: 'https://api.spotify.com/v1/me/top/artists',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
-    };
+  };
 
   var topArtistsPromise = getTopArtists(options);
  

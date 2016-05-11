@@ -145,7 +145,7 @@ Aquires Login tokens from spotify and gets data
           var track = toptrackdict[artist.id]
           recArtistPlaceholder.innerHTML += recArtistTemplate({
             artist: artist,
-            track: track
+            track: track.uri
           });
         }
         console.log(recommending);
