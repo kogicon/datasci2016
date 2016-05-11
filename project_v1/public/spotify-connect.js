@@ -428,7 +428,11 @@ document.getElementById('get-hipster-score').addEventListener('click', function(
     console.log(data);
     hipsterScorePlaceholder.innerHTML = hipsterScoreTemplate({
       score: score,
-      genres: Object.keys(genres).length
+      genres: genres.length,
+      mostlistenedgenre: data.mostlistengenre,
+      allgenres: data.genres,
+      popartist: data.popartist,
+      obscureartist: data.obscureartist
     });
   });
 }, false);
