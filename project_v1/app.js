@@ -218,7 +218,7 @@ app.get('/get_hipster_score', function(req, res) {
       }
       ids = ids.slice(0,ids.length-1);
       var url = 'https://api.spotify.com/v1/artists?ids='+ids;
-      //console.log("url: " + url);
+      console.log("url: " + url);
       options['url'] = url
 
       var ArtistPromise = get(options);
@@ -230,6 +230,7 @@ app.get('/get_hipster_score', function(req, res) {
         for (artistidx in result.artists) {
           count += 1
           var artist = result.artists[artistidx];
+          console.log(artist.name);
           artistPopularityDict[artist.name] = artist.popularity
 
           trackArtistCountList[userID] += 1;
@@ -347,7 +348,7 @@ app.get('/get_hipster_score', function(req, res) {
 
     Promise.all(TrackPromises).then(function(arrayOfResults) {
       console.log("got all tracks");
-      //console.log(trackArtistList)
+      console.log(trackArtistList)
       setTimeout(getAllArtists(userID), 5000);
       //setTimeout(getArtistPopularities(user)
       //console.log("back from timeout")

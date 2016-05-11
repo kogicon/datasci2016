@@ -166,9 +166,23 @@ Aquires Login tokens from spotify and gets data
 
             audioTracks[artist.id] = track.preview_url;
 
+            related = "";
+            for (index in recommending[artist.id]) {
+              for (artidx in top_artists_info) {
+                console.log("comp");
+                console.log(recommending[artist.id][index].id);
+                console.log(top_artists_info[artidx].id);
+                if (recommending[artist.id][index].id == top_artists_info[artidx].id) {
+                  related += top_artists_info[artidx].name + ", ";
+                }
+              }
+            }
+            related = related.substring(0,related.length-2);
+
             recArtistPlaceholder.innerHTML += recArtistTemplate({
               artist: artist,
-              track: track.uri
+              track: track.uri,
+              related: related
             });
           }
 
@@ -360,9 +374,9 @@ Aquires Login tokens from spotify and gets data
                   console.log("drawing circle at:");
                   console.log(dim/2 + (pos_index*70));
                   var circ = svg.append("circle")
-                  .attr("r", 33)
-                  .attr("cx", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 35))
-                  .attr("cy", 90)
+                  .attr("r", 50)
+                  .attr("cx", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 55))
+                  .attr("cy", 80)
                   .attr("id", top_artists[i].split(' ').join('').replace(".",""))
                   .style("stroke", "#00c844")
                   .style("fill", "#009633");
@@ -375,12 +389,11 @@ Aquires Login tokens from spotify and gets data
 
                   for (var k = 0; k < split_name.length; k++) {
                     svg.append("text")
-                    .attr("x", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 35))
-                    .attr("y", 80 + 10 * k)
+                    .attr("x", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 55))
+                    .attr("y", 70 + 18 * k)
                     .attr("text-anchor", "middle")
                     .text(split_name[k])
-                    .style("fill", "white")
-                    .style("font-size", "10px");
+                    .style("fill", "white");
                   }
                   pos_index++;
                   found = true;
