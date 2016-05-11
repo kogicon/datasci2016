@@ -166,9 +166,23 @@ Aquires Login tokens from spotify and gets data
 
             audioTracks[artist.id] = track.preview_url;
 
+            related = "";
+            for (index in recommending[artist.id]) {
+              for (artidx in top_artists_info) {
+                console.log("comp");
+                console.log(recommending[artist.id][index].id);
+                console.log(top_artists_info[artidx].id);
+                if (recommending[artist.id][index].id == top_artists_info[artidx].id) {
+                  related += top_artists_info[artidx].name + ", ";
+                }
+              }
+            }
+            related = related.substring(0,related.length-2);
+
             recArtistPlaceholder.innerHTML += recArtistTemplate({
               artist: artist,
-              track: track.uri
+              track: track.uri,
+              related: related
             });
           }
 
