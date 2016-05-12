@@ -166,6 +166,11 @@ Aquires Login tokens from spotify and gets data
           console.log(rec_artists);
           console.log("Nice!");
           recArtistPlaceholder.innerHTML = "";
+          var h2tag = document.createElement("h2")
+          var t = document.createTextNode("Recommended Artists"); 
+          h2tag.appendChild(t);
+          recArtistPlaceholder.appendChild(h2tag);
+
           for (var i = 0; i < rec_artists.length; i++) {
             console.log(rec_artists[i])
             var artist = rec_artists[i];
