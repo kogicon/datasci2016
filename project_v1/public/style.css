@@ -29,7 +29,7 @@ iframe {
 
 #genreslist {
   overflow-y:scroll;
-  max-height: 60px;
+  max-height: 100px;
 }
 
 #artists img, #tracks img, .placeholder-img {
@@ -62,7 +62,7 @@ iframe {
 }
 
 .artist img {
-  height: 150px;
+  width: 150px;
   float: left;
 }
 
@@ -133,9 +133,25 @@ svg {
   background-position: pull-right;
 }
 
+#icon {
+  width: 300px;
+  height: 300px;
+  margin-top: .5em;
+}
+
+#title {
+  margin-top: .5em;
+}
+
 #user-profile img {
   border-radius: 100px;
 }
+
+.btn-primary {
+  font-size: 30px;
+  padding: .7em;
+}
+
 
 /*
 <!--

@@ -12,15 +12,21 @@
   <body>
 
     <div class="container">
+      <center>
+        <img id="icon" src="trebleclef.png"/>
+      </center>
       <h1 id="title">TrebleClef Music Engine</h1>
       <div id="login">
         <center>
           <a href="login" class="btn btn-primary">Log in with Spotify</a>
         </center>
       </div>
+      
       <div id="loggedin">
-        <div id="user-profile">
-        </div>
+
+          <div id="user-profile">
+          </div>
+        </center>
         <div id="oauth">
         </div>
 
@@ -38,7 +44,7 @@
 
         <div id = "artist-viz"></div>
 
-        <h2>Recommended Artists</h2>
+        <h2 id="rec-artists-title">Recommended Artists</h2>
         <div id="rec-artists">
 
         </div>
@@ -73,7 +79,7 @@
     <script id="hipster-score-template" type="text/x-handlebars-template">
       <div class="callToAction Score"><h1 class="bigText white">Hipster Score: {{score}}%</h1></div>
       <div class="callToAction Genre"><h1 class="bigText white">#Genres: {{genres}}</h1></div>
-      <div class="callToAction Genre"><h1 class="bigText white">Your most-listened to genre: {{mostlistenedgenre}}</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">Your most-listened-to genre: {{mostlistenedgenre}}</h1></div>
       <div id="genreslist" class="callToAction Genre"><h1 class="bigText white">Your genres: {{allgenres}}</h1></div>
       <div class="callToAction Genre"><h1 class="bigText white">Your most popular artist: {{popartist}}</h1></div>
       <div class="callToAction Genre"><h1 class="bigText white">Your most obscure artist: {{obscureartist}}</h1></div>
