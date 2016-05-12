@@ -78,7 +78,7 @@ Aquires Login tokens from spotify and gets data
 
           $('#login').hide();
           $('#loggedin').show();
-
+          $('#rec-artists-title').hide();
 
           /*document.getElementById('obtain-new-token').addEventListener('click', function() {
             $.ajax({
@@ -145,8 +145,10 @@ Aquires Login tokens from spotify and gets data
             'access_token': access_token
           }
         }).done(function(data) {
-          top_artists_info = data.artists;
 
+          $('#rec-artists-title').show();
+
+          top_artists_info = data.artists;
 
           var top_artists = []
           for (var i = 0; i < top_artists_info.length; i++) {
@@ -205,6 +207,8 @@ Aquires Login tokens from spotify and gets data
           var pack = d3.layout.pack()
           .size([dim, dim])
           .value(function(d) { return d.size; });
+
+          $("#artist-viz").html("");
 
           var svg = d3.select("#artist-viz").append("svg")
           .attr("width", dim)
