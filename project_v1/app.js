@@ -132,14 +132,6 @@ app.get('/callback', function(req, res) {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        /*var options = {
-          url: 'https://api.spotify.com/v1/me/playlists',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };*/
-        
-        
-
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -181,16 +173,8 @@ app.get('/get_hipster_score', function(req, res) {
     };
 
     var ArtistPromises = [];
-    //console.log(trackArtistLi)
     var length = trackArtistList[userID].length
-    /*if (length > 600) {
-      trackArtistList[userID] = trackArtistList[userID].slice(0, 600);
-    }
-    else {
-      trackArtistList[userID] = trackArtistList[userID].slice(0, customFloor(trackArtistList[userID].length, 50));
-    }*/
 
-    console.log("length: " + trackArtistList[userID].length)
     for (var index = 0; index < trackArtistList[userID].length; index+=50) {
       var ids = "";
       var upperBound;
@@ -232,14 +216,9 @@ app.get('/get_hipster_score', function(req, res) {
           var artist = result.artists[artistidx];
           console.log(artist.name);
           artistPopularityDict[artist.name] = artist.popularity
-
           trackArtistCountList[userID] += 1;
-          //console.log("genres: " + artist.genres);
           for (index in artist.genres) {
             var genre = artist.genres[index];
-
-
-    
             if (!(genre in trackGenreDict[userID])) {
               trackGenreDict[userID][genre] = 0;
             }
@@ -247,37 +226,23 @@ app.get('/get_hipster_score', function(req, res) {
           }
           if (artist.genres.length == 0) {
             trackSepCountList[userID] += 1;
-          }
-          
+          }      
         }
-
-        //console.log("count: " + count)
-        //console.log("promises: " + promises)
-        //console.log("artist promises: " + ArtistPromises.length)
-
       }));
-
     }
 
     Promise.all(ArtistPromises).then(function(arrayOfResults) {
       console.log("got all artists");
-      //console.log(trackGenreDict)
       var sortable = [];
       var sortable2 = [];
-      //var sortable3 = [];
-      //console.log(trackGenreDict);
       for (var genre in trackGenreDict[userID]) {
         sortable.push([genre, trackGenreDict[userID][genre]])
       }
       sortable.sort(function(a, b) {return b[1] - a[1]})
-      //console.log(sortable);
       for (var artist in artistPopularityDict) {
-        //console.log(artist, artistPopularityDict[artist])
         sortable2.push([artist, artistPopularityDict[artist]])
       }
-
       sortable2.sort(function(a, b) {return b[1] - a[1]})
-      //console.log(sortable2);
       console.log("Your most listened to genre is: " + sortable[0][0])
       console.log("You listen to these genres: " + Object.keys(trackGenreDict[userID]))
       console.log("Your most popular artist is: " + sortable2[0][0])
@@ -288,9 +253,6 @@ app.get('/get_hipster_score', function(req, res) {
         total += trackScoreList[userID][index];
       }
       total = 100 - total/trackScoreList[userID].length;
-
-      //finalScoreList[userID] = [total, trackGenreDict[userID], trackSepCountList[userID], trackArtistCountList[userID]];
-
       res.send({
         'score': total,
         'genres': trackGenreDict[userID],
@@ -299,14 +261,8 @@ app.get('/get_hipster_score', function(req, res) {
         'popartist': sortable2[0][0],
         'obscureartist': sortable2[sortable2.length - 1][0]
       });
-
     });
-
   }
-
-  var customFloor = function(value, roundTo) {
-    return Math.floor(value / roundTo) * roundTo;
-}
 
   function getAllTracks(userID) {
 
@@ -317,22 +273,14 @@ app.get('/get_hipster_score', function(req, res) {
     };
 
     var TrackPromises = [];
-    //console.log(allTracksList[userID])
-
     for (index in allTracksList[userID]) {
-
       var tracks = allTracksList[userID][index];
       options['url'] = tracks.href;
-
       var TrackPromise = get(options);
-
       TrackPromises.push(TrackPromise.then(function (result) {
-
-
         var tracks = result.items;
         for (index in tracks) {
           var track = tracks[index].track;
-
           trackScoreList[userID].push(track.popularity);
           for (index2 in track.artists) {
             var artist = track.artists[index2];
@@ -350,18 +298,13 @@ app.get('/get_hipster_score', function(req, res) {
       console.log("got all tracks");
       console.log(trackArtistList)
       setTimeout(getAllArtists(userID), 5000);
-      //setTimeout(getArtistPopularities(user)
-      //console.log("back from timeout")
-
     });
 
   }
 
 
   function getAllPlaylists(options, userID) {   
-
     var playlistsPromise = get(options);
-
     playlistsPromise.then(function (result) {
       var playlists = result.items;
       for (index in playlists) {
@@ -373,92 +316,67 @@ app.get('/get_hipster_score', function(req, res) {
         for (j in allTracksList[userID][index]) {
           trackscount += 1
         }
-
       }
       if (result.next && allTracksList[userID].length < 75) {
-      //if (result.next) {
         options['url'] = result.next;
         return getAllPlaylists(options, userID);
       } else {
-        /*if (allTracksList[userID].length = 100) {
-          allTracksList[userID] = allTracksList[userID].slice(0, 50);
-        }*/
         setTimeout(getAllTracks(userID), 5000);
-        //getAllTracks(userID);
       }
     });
 
     return playlistsPromise;
   }
-
   
-    userID = "me";
+  userID = "me";
+  allTracksList[userID] = [];
+  trackScoreList[userID] = [];
+  trackGenreDict[userID] = {};
+  trackArtistList[userID] = [];
+  trackArtistCountList[userID] = 0;
+  trackSepCountList[userID] = 0;
 
-    console.log(userID);
-    allTracksList[userID] = [];
-    trackScoreList[userID] = [];
-    trackGenreDict[userID] = {};
-    trackArtistList[userID] = [];
-    trackArtistCountList[userID] = 0;
-    trackSepCountList[userID] = 0;
-
-    var options = {
-      url: 'https://api.spotify.com/v1/me/playlists',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
-
-    var getPlaylistsPromise = getAllPlaylists(options, userID);
-
+  var options = {
+    url: 'https://api.spotify.com/v1/me/playlists',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+  var getPlaylistsPromise = getAllPlaylists(options, userID);
 });
 
 
 app.get('/get_basic_recommendations', function(req, res) { 
 
   var access_token = req.query.access_token;
-
-
   var topArtistList = [];
   var topArtistDict = {};
-  
   var relatedArtistsCounts = {};
   var relatedArtistsInfo = {};
 
   function getAllRelatedArtists() {
-
     console.log("Getting all related artists!");
-
     var options = {
       url: 'https://api.spotify.com/v1/me/artist',
       headers: { 'Authorization': 'Bearer ' + access_token },
       json: true
     };
-
     var RelatedPromises = [];
-
-
     for (index in topArtistList) {
       var artist = topArtistList[index];
       var id = artist.id;
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
       var RelatedPromise = get(options);
-
-
       RelatedPromises.push(RelatedPromise.then(function (artist) { return function (result) {
-        //console.log(result);
-
         var artists = result.artists;
         for (index in artists) {
           var recartist = artists[index];
           var recartistid = recartist.id;
-
           if (!(recartistid in relatedArtistsInfo)) {
             relatedArtistsInfo[recartistid] = recartist;
             relatedArtistsCounts[recartistid] = [];
           }
           relatedArtistsCounts[recartistid].push(artist);
         }
-        //console.log(relatedArtistsCounts);
       }; }(artist)));
     }
 
@@ -467,56 +385,29 @@ app.get('/get_basic_recommendations', function(req, res) {
       topTrackPromises = []
       sum = 0;
       for (index in relatedArtistsCounts) {
-        //console.log(relatedArtistsInfo[index].name);
-        //console.log(relatedArtistsCounts[index]);
         sum += relatedArtistsCounts[index];
       }
-
       var artistsListened = [];
-
       for (index in topArtistList) {
         artistsListened.push(topArtistList[index].id);
       }
-
       console.log("Recommended Artists!");
       recList = getTopRecs(relatedArtistsCounts, 5, artistsListened);
-      //console.log("here they are:");
-      //console.log(recList.length);
       recInfoList = [];
       for (var i = 0; i < recList.length; i++) {
-        var artistID = recList[i];
-        //console.log(relatedArtistsInfo[artistID])
-        
-        getTopTrack(artistID, topTrackDict, topTrackPromises);
-        
-       
-
-
-        //console.log(relatedArtistsInfo[artistID].name);
-        //console.log(relatedArtistsCounts[artistID]);
-        
+        var artistID = recList[i];        
+        getTopTrack(artistID, topTrackDict, topTrackPromises);  
       }
-      
-
       console.log("Finished printing all related artists!");
-      //console.log(sum);
       Promise.all(topTrackPromises).then(function() {
         res.send({
-        'artists': topArtistList,
-        'info': recInfoList,
-        'toptrack': topTrackDict,
-        'recommend': relatedArtistsCounts
-
-
+          'artists': topArtistList,
+          'info': recInfoList,
+          'toptrack': topTrackDict,
+          'recommend': relatedArtistsCounts
         })
-      
-
       });
-
-
-    //console.log("reached end of func");
     });
-
   };
 
   function getTopTrack(artistID, topTrackDict, topTrackPromises) {
@@ -569,7 +460,6 @@ app.get('/get_basic_recommendations', function(req, res) {
 
       for (index in artists) {
         var artist = artists[index];
-        //console.log(artist);
         topArtistList.push(artist);
         topArtistDict[artist] = artist.popularity;
       }
@@ -577,7 +467,6 @@ app.get('/get_basic_recommendations', function(req, res) {
         options['url'] = result.next;
         return getTopArtists(options);
       } else {
-        //console.log(topArtistList);
         if (topArtistList.length == 0) {
           topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr", "name":"Hello"});
           topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c", "name":"Hello1"});
@@ -587,7 +476,6 @@ app.get('/get_basic_recommendations', function(req, res) {
         getAllRelatedArtists();
       }
     });
-
     return topArtistsPromise;
   }
   var options = {
