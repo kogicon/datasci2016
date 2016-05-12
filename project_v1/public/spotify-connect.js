@@ -159,7 +159,6 @@ Aquires Login tokens from spotify and gets data
           }  
           console.log("Top name!");
           console.log(top_artists_info);
-          console.log(top_artists);
 
           toptrackdict = data.toptrack;
           console.log(toptrackdict);
@@ -169,7 +168,6 @@ Aquires Login tokens from spotify and gets data
           console.log("Nice!");
           recArtistPlaceholder.innerHTML = "";
           for (var i = 0; i < rec_artists.length; i++) {
-            console.log(rec_artists[i])
             var artist = rec_artists[i];
             var track = toptrackdict[artist.id];
             if (artist.images[2]) {
@@ -183,9 +181,6 @@ Aquires Login tokens from spotify and gets data
             related = "";
             for (index in recommending[artist.id]) {
               for (artidx in top_artists_info) {
-                console.log("comp");
-                console.log(recommending[artist.id][index].id);
-                console.log(top_artists_info[artidx].id);
                 if (recommending[artist.id][index].id == top_artists_info[artidx].id) {
                   related += top_artists_info[artidx].name + ", ";
                 }
@@ -369,10 +364,7 @@ Aquires Login tokens from spotify and gets data
 
           var pos_index = 0;
           var found = false;
-          console.log("printing artists");
           for (var i = 0; i < top_artists_info.length; i++) {
-            console.log("art");
-            console.log(top_artists_info[i]);
             var top_artist = top_artists_info[i];
             found = false;
             for (var artistidx in rec_artists) {
@@ -381,14 +373,8 @@ Aquires Login tokens from spotify and gets data
       
               for (var j = 0; j < recommending[recid].length; j++){
                 
-                console.log(recommending[recid][j].id);
-
-                console.log(top_artist.id);
-                
                 if (recommending[recid][j].id == top_artist.id) {
 
-                  console.log("drawing circle at:");
-                  console.log(dim/2 + (pos_index*70));
                   var circ = svg.append("circle")
                   .attr("r", 50)
                   .attr("cx", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 55))
@@ -424,7 +410,6 @@ Aquires Login tokens from spotify and gets data
           for (var key in recommending) {
             for (var i = 0; i < rec_artists.length; i++) {
               if (key == rec_artists[i].id) {
-                console.log("making lines!");
                 for (var j = 0; j < recommending[key].length; j++) {
                   svg.append('line')
                   .attr("stroke", "black")
