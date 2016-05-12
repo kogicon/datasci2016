@@ -62,7 +62,7 @@ iframe {
 }
 
 .artist img {
-  height: 150px;
+  width: 150px;
   float: left;
 }
 
@@ -114,8 +114,9 @@ iframe {
   width: auto;
 }
 svg {
-  margin-left: -200px;
+  /*margin-left: -200px;*/
   background-color: #23cf5f;
+  margin-left: -200px;
 }
 
 .btn, #obtain-new-token {
@@ -144,6 +145,11 @@ svg {
 
 #user-profile img {
   border-radius: 100px;
+}
+
+.btn-primary {
+  font-size: 30px;
+  padding: .7em;
 }
 
 
