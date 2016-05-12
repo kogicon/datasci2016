@@ -162,7 +162,11 @@ Aquires Login tokens from spotify and gets data
             console.log(rec_artists[i])
             var artist = rec_artists[i];
             var track = toptrackdict[artist.id];
-            var imageurl = artist.images[2].url;
+            if (artist.images[2]) {
+              var imageurl = artist.images[2].url;
+            } else {
+              var imageurl = "";
+            }
 
             audioTracks[artist.id] = track.preview_url;
 
