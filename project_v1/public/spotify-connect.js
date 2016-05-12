@@ -420,7 +420,15 @@ Aquires Login tokens from spotify and gets data
                   .attr("x1", d3.select("#"+rec_artists[i].name.split(' ').join('').replace(".", '')).attr("cx"))
                   .attr("y1", d3.select("#"+rec_artists[i].name.split(' ').join('').replace(".", '')).attr("cy") - 100)
                   .attr("x2", d3.select("#"+recommending[key][j].name.split(' ').join('').replace(".", '')).attr("cx"))
-                  .attr("y2", 130);
+                  .attr("y2", 123)
+                  .on("mouseover", function() {
+                    d3.select(this)
+                    .style("stroke", "orange");        
+                  })
+                  .on("mouseout", function() {
+                    d3.select(this)
+                    .style("stroke", "black")
+                  })
                 }
               }
             }
