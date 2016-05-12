@@ -131,6 +131,11 @@ svg {
 #track-viewer {
   background-position: pull-right;
 }
+
+#user-profile img {
+  border-radius: 100px;
+}
+
 /*
 <!--
 <style type="text/css">
