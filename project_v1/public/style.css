@@ -29,7 +29,7 @@ iframe {
 
 #genreslist {
   overflow-y:scroll;
-  max-height: 60px;
+  max-height: 100px;
 }
 
 #artists img, #tracks img, .placeholder-img {
