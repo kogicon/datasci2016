@@ -68,11 +68,19 @@ Aquires Login tokens from spotify and gets data
         success: function(response) {
           userProfilePlaceholder.innerHTML = userProfileTemplate(response);
 
+          var icon = d3.select("#icon");
+          console.log(icon);
+            icon.transition("shrink")
+            .delay(0)
+            .duration(1200)
+            .style("width", "50px")
+            .style("height", "50px");
+
           $('#login').hide();
           $('#loggedin').show();
 
 
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
+          /*document.getElementById('obtain-new-token').addEventListener('click', function() {
             $.ajax({
               url: '/refresh_token',
               data: {
@@ -85,7 +93,7 @@ Aquires Login tokens from spotify and gets data
                 refresh_token: refresh_token
               });
             });
-          }, false);
+          }, false);*/
 
         }
       });
@@ -124,7 +132,7 @@ Aquires Login tokens from spotify and gets data
             $('#loggedin').show();
           }
         });*/
-} else {
+      } else {
         // render initial screen
         $('#login').show();
         $('#loggedin').hide();
