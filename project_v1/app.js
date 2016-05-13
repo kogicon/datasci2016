@@ -163,6 +163,7 @@ app.get('/get_hipster_score', function(req, res) {
   trackSepCountList = {};
   artistPopularityDict = {}
 
+  //Gets all of a users artists from the tracks from their playlists
   function getAllArtists(userID) {
 
 
@@ -174,7 +175,7 @@ app.get('/get_hipster_score', function(req, res) {
 
     var ArtistPromises = [];
     var length = trackArtistList[userID].length
-
+    //iterate through tracks
     for (var index = 0; index < trackArtistList[userID].length; index+=50) {
       var ids = "";
       var upperBound;
@@ -193,13 +194,9 @@ app.get('/get_hipster_score', function(req, res) {
           break;
         }
         var sp = trackArtistList[userID][j].split("/");
-  
-        //console.log("j+1: " + parseInt(j+1));
         ids += sp[sp.length-1] + ",";
-
-        
-      
       }
+      //Spotify's getSeveralTracks endpoint cuts down the number of calls you have to make
       ids = ids.slice(0,ids.length-1);
       var url = 'https://api.spotify.com/v1/artists?ids='+ids;
       console.log("url: " + url);
@@ -210,7 +207,7 @@ app.get('/get_hipster_score', function(req, res) {
       promises = 0
       ArtistPromises.push(ArtistPromise.then(function (result) {
         promises += 1
-       
+        //Keeps track of genres of tracks and artist popularities
         for (artistidx in result.artists) {
           count += 1
           var artist = result.artists[artistidx];
@@ -235,10 +232,12 @@ app.get('/get_hipster_score', function(req, res) {
       console.log("got all artists");
       var sortable = [];
       var sortable2 = [];
+      //sorts dictionary by most popular genre
       for (var genre in trackGenreDict[userID]) {
         sortable.push([genre, trackGenreDict[userID][genre]])
       }
       sortable.sort(function(a, b) {return b[1] - a[1]})
+      //sorts dictionary by most popular artist
       for (var artist in artistPopularityDict) {
         sortable2.push([artist, artistPopularityDict[artist]])
       }
@@ -264,6 +263,7 @@ app.get('/get_hipster_score', function(req, res) {
     });
   }
 
+  //Gets all of a user's tracks from their playlists
   function getAllTracks(userID) {
 
     var options = {
@@ -273,6 +273,7 @@ app.get('/get_hipster_score', function(req, res) {
     };
 
     var TrackPromises = [];
+    //Gets tracks from a playlist using the playlist's link
     for (index in allTracksList[userID]) {
       var tracks = allTracksList[userID][index];
       options['url'] = tracks.href;
@@ -302,7 +303,7 @@ app.get('/get_hipster_score', function(req, res) {
 
   }
 
-
+  //Gets all of a user's public playlists using the Spotify API
   function getAllPlaylists(options, userID) {   
     var playlistsPromise = get(options);
     playlistsPromise.then(function (result) {
@@ -317,10 +318,12 @@ app.get('/get_hipster_score', function(req, res) {
           trackscount += 1
         }
       }
+      //paging
       if (result.next && allTracksList[userID].length < 75) {
         options['url'] = result.next;
         return getAllPlaylists(options, userID);
       } else {
+        //Don't want to get rate-limited
         setTimeout(getAllTracks(userID), 5000);
       }
     });
@@ -353,6 +356,7 @@ app.get('/get_basic_recommendations', function(req, res) {
   var relatedArtistsCounts = {};
   var relatedArtistsInfo = {};
 
+  //Gets all related artists of a user's top artists
   function getAllRelatedArtists() {
     console.log("Getting all related artists!");
     var options = {
@@ -364,6 +368,7 @@ app.get('/get_basic_recommendations', function(req, res) {
     for (index in topArtistList) {
       var artist = topArtistList[index];
       var id = artist.id;
+      //getting related artists of an artist
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
       var RelatedPromise = get(options);
       RelatedPromises.push(RelatedPromise.then(function (artist) { return function (result) {
@@ -371,6 +376,7 @@ app.get('/get_basic_recommendations', function(req, res) {
         for (index in artists) {
           var recartist = artists[index];
           var recartistid = recartist.id;
+          //uses a dictionary to keep track of related artists
           if (!(recartistid in relatedArtistsInfo)) {
             relatedArtistsInfo[recartistid] = recartist;
             relatedArtistsCounts[recartistid] = [];
@@ -410,6 +416,7 @@ app.get('/get_basic_recommendations', function(req, res) {
     });
   };
 
+  //Gets a user's top tracks from Spotify's API
   function getTopTrack(artistID, topTrackDict, topTrackPromises) {
 
     var options = {
@@ -428,11 +435,13 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   }
 
+  //Gets a user's artist recommendations
   function getTopRecs(dict, count, artistsListened) {
     recList = [];
     currMax = null;
     while (recList.length < count) {
       currMax = null;
+      //Finds 5 artists with the max related artist count
       for (index in dict) {
         if (recList.indexOf(index) <= -1 && artistsListened.indexOf(index) <= -1) {
           if (currMax == null) {
@@ -450,23 +459,27 @@ app.get('/get_basic_recommendations', function(req, res) {
     }
     return recList;
   }
-
+  
+  //Gets a user's top artists from the Spotify API. If a user has no top artists, we use dummy artists.
   function getTopArtists(options) {    
 
     var topArtistsPromise = get(options);
 
     topArtistsPromise.then(function (result) {
       var artists = result.items;
-
+      //Adds artist to the array, and keeps track of artist popularity
       for (index in artists) {
         var artist = artists[index];
         topArtistList.push(artist);
         topArtistDict[artist] = artist.popularity;
       }
+      //paging
       if (result.next) {
         options['url'] = result.next;
         return getTopArtists(options);
-      } else {
+      }
+      //If a user has no top artists
+       else {
         if (topArtistList.length == 0) {
           topArtistList.push({"id":"3P5NW1wQjcWpR0VsT1m0xr", "name":"Hello"});
           topArtistList.push({"id":"4MXUO7sVCaFgFjoTI5ox5c", "name":"Hello1"});
@@ -490,7 +503,7 @@ app.get('/get_basic_recommendations', function(req, res) {
 });
 
 
-
+//Handler for the home page of our app, gives the user an authentication token
 app.get('/refresh_token', function(req, res) {
 
   // requesting access token from refresh token
