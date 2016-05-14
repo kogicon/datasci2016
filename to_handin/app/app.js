@@ -191,19 +191,19 @@ app.get('/get_hipster_score', function(req, res) {
       //Spotify's getSeveralTracks endpoint cuts down the number of calls you have to make
       ids = ids.slice(0,ids.length-1);
       var url = 'https://api.spotify.com/v1/artists?ids='+ids;
-      console.log("url: " + url);
+      //console.log("url: " + url);
       options['url'] = url
       //calls getSeveralTracks
       var ArtistPromise = get(options);
       //returns a promise for each call made
       ArtistPromises.push(ArtistPromise.then(function (result) {
-        promises += 1
+        //promises += 1
         //Keeps track of genres of tracks and artist popularities
         for (artistidx in result.artists) {
           var artist = result.artists[artistidx];
           artistPopularityDict[artist.name] = artist.popularity
           trackArtistCountList[userID] += 1;
-          //iterates all the genres of each artist and adds the mto a dictionary
+          //iterates all the genres of each artist and adds them to a dictionary
           for (index in artist.genres) {
             var genre = artist.genres[index];
             if (!(genre in trackGenreDict[userID])) {
@@ -218,7 +218,7 @@ app.get('/get_hipster_score', function(req, res) {
         }
       }));
     }
-    //waits for all the artist promises to resolve (because JavaScript is asynchronous)
+    //waits for all the artist promises to resolve (because AJAX is asynchronous)
     Promise.all(ArtistPromises).then(function(arrayOfResults) {
       console.log("got all artists");
       var sortable = [];
@@ -366,15 +366,15 @@ app.get('/get_hipster_score', function(req, res) {
 
   //Gets called recursively with index for next user to get all info for the userID at that index
   var callForUser = function (useridx) {
-    userID = userIDs[useridx].toLowerCase();
+    userIDm = userIDs[useridx].toLowerCase();
 
-    console.log(userID);
-    allTracksList[userID] = [];
-    trackScoreList[userID] = [];
-    trackGenreDict[userID] = {};
-    trackArtistList[userID] = [];
-    trackArtistCountList[userID] = 0;
-    trackSepCountList[userID] = 0;
+    console.log(userIDm);
+    allTracksList[userIDm] = [];
+    trackScoreList[userIDm] = [];
+    trackGenreDict[userIDm] = {};
+    trackArtistList[userIDm] = [];
+    trackArtistCountList[userIDm] = 0;
+    trackSepCountList[userIDm] = 0;
 
     var options = {
       url: 'https://api.spotify.com/v1/users/'+userID+'/playlists',
@@ -382,7 +382,7 @@ app.get('/get_hipster_score', function(req, res) {
       json: true
     };
 
-    var getPlaylistsPromise = getAllPlaylists(options, userID);
+    var getPlaylistsPromise = getAllPlaylists(options, userIDm);
     
     if (useridx+1 < userIDs.length) {
       //Waits 10 seconds (to avoid rate limiting by Spotify API), then calls for next user
