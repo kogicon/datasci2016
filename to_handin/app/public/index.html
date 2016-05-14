@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TrebleClef </title>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+  </head>
+
+  <body>
+
+    <div class="container">
+      <center>
+        <img id="icon" src="trebleclef.png"/>
+      </center>
+      <h1 id="title">TrebleClef Music Engine</h1>
+      <div id="login">
+        <center>
+          <a href="login" class="btn btn-primary">Log in with Spotify</a>
+        </center>
+      </div>
+      
+      <div id="loggedin">
+
+          <div id="user-profile">
+          </div>
+        </center>
+        <div id="oauth">
+        </div>
+
+        
+        <center>
+          <button class="btn btn-primary" id="get-basic-recommendations">Get Recommendations</button>
+          <button class="btn btn-primary" id="get-hipster-score">Get Hipster Score</button>
+        </center>
+    
+
+
+        <div id="score-view">
+        </div>
+        
+
+        <div id = "artist-viz"></div>
+
+
+        <div id="rec-artists">
+
+        </div>
+        <br><br><br>
+
+      </div>
+    </div>
+
+    <script id="rec-artist-template" type="text/x-handlebars-template">
+      <div class="artist">
+        <img class="artist-img med" src = "{{artist.images.2.url}}" />
+        <ul class="artist-info">
+          <li><h1>{{artist.name}}</h1></li>
+          <li><b>Artist genre: {{artist.genres}}</b></li>
+          <li><b>Spotify URL: <a target="_blank" href="https://play.spotify.com/artist/{{artist.id}}">{{artist.uri}}</a></b></li>
+          <li><b>Related artists: {{related}}</b></li>
+        </ul>
+        <iframe src="https://embed.spotify.com/?uri={{track}}" frameborder="0" allowtransparency="true"></iframe>
+      </div>
+    </script>
+
+    <script id="hipster-score-template" type="text/x-handlebars-template">
+      <div class="callToAction Score"><h1 class="bigText white">Hipster Score: {{score}}%</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">#Genres: {{genres}}</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">Your most-listened-to genre: {{mostlistenedgenre}}</h1></div>
+      <div id="genreslist" class="callToAction Genre"><h1 class="bigText white">Your genres: {{allgenres}}</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">Your most popular artist: {{popartist}}</h1></div>
+      <div class="callToAction Genre"><h1 class="bigText white">Your most obscure artist: {{obscureartist}}</h1></div>
+
+    </script>
+
+    <script id="user-profile-template" type="text/x-handlebars-template">
+      <div class="media">
+        <div class="pull-left">
+          <img class="media-object" width="150" src="{{images.0.url}}" />
+        </div>
+        <div class="media-body">
+          <dl class="dl-horizontal">
+            <h3>Name: <span style="font-weight:300;">{{display_name}}</span></h3>
+            <h3>Id: <span style="font-weight:300;">{{id}}</span></h3>
+          </dl>
+        </div>
+      </div>
+    </script>
+
+    <script id="oauth-template" type="text/x-handlebars-template">
+      <!--<h2>oAuth info</h2>
+      <dl class="dl-horizontal">
+        <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
+      </dl>
+      -->
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="spotify-connect.js"></script>
+    
+</html>
+
+
