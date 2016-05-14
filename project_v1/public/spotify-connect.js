@@ -19,7 +19,7 @@ Aquires Login tokens from spotify and gets data
    }
    return hashParams;
  }
-
+//user pic template
  var userProfileSource = document.getElementById('user-profile-template').innerHTML,
  userProfileTemplate = Handlebars.compile(userProfileSource),
  userProfilePlaceholder = document.getElementById('user-profile');
@@ -28,10 +28,12 @@ Aquires Login tokens from spotify and gets data
  oauthTemplate = Handlebars.compile(oauthSource),
  oauthPlaceholder = document.getElementById('oauth');
 
+//recommended artist template
  var recArtistSource = document.getElementById('rec-artist-template').innerHTML,
  recArtistTemplate = Handlebars.compile(recArtistSource),
  recArtistPlaceholder = document.getElementById('rec-artists');
 
+//hipster score template
  var hipsterScoreSource = document.getElementById('hipster-score-template').innerHTML,
  hipsterScoreTemplate = Handlebars.compile(hipsterScoreSource),
  hipsterScorePlaceholder = document.getElementById('score-view');
