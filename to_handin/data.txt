@@ -1,3 +1,5 @@
+All of the data files are in final_data
+
 Music-centric hypothesis:
 
 bigalbumtotracks.txt - didctionary that maps album to tracks with their track numbers and popularities
