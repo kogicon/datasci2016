@@ -59,7 +59,7 @@ Aquires Login tokens from spotify and gets data
         access_token: access_token,
         refresh_token: refresh_token
       });
-
+      //Handler for the login page
       $.ajax({
         url: 'https://api.spotify.com/v1/me',
         headers: {
@@ -67,7 +67,7 @@ Aquires Login tokens from spotify and gets data
         },
         success: function(response) {
           userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
+          //display our logo
           var icon = d3.select("#icon");
           console.log(icon);
           icon.transition("shrink")
@@ -88,7 +88,7 @@ Aquires Login tokens from spotify and gets data
         $('#login').show();
         $('#loggedin').hide();
       }
-
+      //Handler for get basic recommendations
       document.getElementById('get-basic-recommendations').addEventListener('click', function() {
         $.ajax({
           url: '/get_basic_recommendations',
@@ -379,7 +379,7 @@ for (var key in recommending) {
 }, false);
 
 
-
+//Handler for get hipster score
 document.getElementById('get-hipster-score').addEventListener('click', function() {
   $.ajax({
     url: '/get_hipster_score',
@@ -392,6 +392,7 @@ document.getElementById('get-hipster-score').addEventListener('click', function(
     score = score.toFixed(2);
     var genres = data.genres;
     console.log(data);
+    //send hipster score, genre, all genres, popular artist, obscure artist to the front end
     hipsterScorePlaceholder.innerHTML = hipsterScoreTemplate({
       score: score,
       genres: genres.length,
