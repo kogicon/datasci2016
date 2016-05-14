@@ -239,6 +239,7 @@ app.get('/get_hipster_score', function(req, res) {
       console.log("Your most obscure artist is: " + sortable2[sortable2.length - 1][0])
 
       var total = 0;
+      //getting hipster score
       for (index in trackScoreList[userID]) {
         total += trackScoreList[userID][index];
       }
@@ -248,7 +249,7 @@ app.get('/get_hipster_score', function(req, res) {
       //finalScoreList[userID] = [total, trackGenreDict[userID], trackSepCountList[userID], trackArtistCountList[userID]];
       //console.log("finalScoreList");
       //console.log(finalScoreList);
-
+      //send the information to the front end, since node.js is backend
       res.send({
         'score': total,
         'genres': trackGenreDict[userID],
@@ -270,16 +271,20 @@ app.get('/get_hipster_score', function(req, res) {
     };
 
     var TrackPromises = [];
-    //Gets tracks from a playlist using the playlist's link
+    //iterate through playlists
     for (index in allTracksList[userID]) {
       var tracks = allTracksList[userID][index];
       options['url'] = tracks.href;
+      //get tracks from playlist
       var TrackPromise = get(options);
+      //make a new promise for each call
       TrackPromises.push(TrackPromise.then(function (result) {
         var tracks = result.items;
+        //iterate through each track in the playlist
         for (index in tracks) {
           var track = tracks[index].track;
           trackScoreList[userID].push(track.popularity);
+          //iterate through each track's artists
           for (index2 in track.artists) {
             var artist = track.artists[index2];
             if (trackArtistList[userID].indexOf(artist.href) < 0) {
@@ -291,7 +296,7 @@ app.get('/get_hipster_score', function(req, res) {
         }
       }));
     }
-
+    //wait for all track promises to resolve
     Promise.all(TrackPromises).then(function(arrayOfResults) {
       console.log("got all tracks");
       console.log(trackArtistList)
@@ -301,15 +306,18 @@ app.get('/get_hipster_score', function(req, res) {
   }
 
   //Gets all of a user's public playlists using the Spotify API
-  function getAllPlaylists(options, userID) {   
+  function getAllPlaylists(options, userID) {  
+    //get a user's public playlists 
     var playlistsPromise = get(options);
     playlistsPromise.then(function (result) {
       var playlists = result.items;
+      //iterate through all playlists
       for (index in playlists) {
         var playlist = playlists[index];
         allTracksList[userID].push(playlist.tracks);
       }
       trackscount = 0
+      //count number of playlists
       for (index in allTracksList[userID]) {
         for (j in allTracksList[userID][index]) {
           trackscount += 1
@@ -407,14 +415,17 @@ app.get('/get_basic_recommendations', function(req, res) {
       json: true
     };
     var RelatedPromises = [];
+    //iterate through top artists
     for (index in topArtistList) {
       var artist = topArtistList[index];
       var id = artist.id;
       //getting related artists of an artist
       options['url'] = 'https://api.spotify.com/v1/artists/' + id + '/related-artists';
       var RelatedPromise = get(options);
+      //returns a new promise for each call to related artists
       RelatedPromises.push(RelatedPromise.then(function (artist) { return function (result) {
         var artists = result.artists;
+        //iterates through related artists
         for (index in artists) {
           var recartist = artists[index];
           var recartistid = recartist.id;
@@ -427,21 +438,25 @@ app.get('/get_basic_recommendations', function(req, res) {
         }
       }; }(artist)));
     }
-
+    //waits for all related artists promises to reslve because JavaScript is asynchronous
     Promise.all(RelatedPromises).then(function(arrayOfResults) {
       topTrackDict = {}
       topTrackPromises = []
       sum = 0;
+      //counts the number of times a related artist appears
       for (index in relatedArtistsCounts) {
         sum += relatedArtistsCounts[index];
       }
+      //iterate through all top artists
       var artistsListened = [];
       for (index in topArtistList) {
         artistsListened.push(topArtistList[index].id);
       }
       console.log("Recommended Artists!");
+      //get 5 recommendations based on related artists and top artists
       recList = getTopRecs(relatedArtistsCounts, 5, artistsListened);
       recInfoList = [];
+      //get the top tracks of a user
       for (var i = 0; i < recList.length; i++) {
         var artistID = recList[i];        
         getTopTrack(artistID, topTrackDict, topTrackPromises);  
@@ -460,7 +475,7 @@ app.get('/get_basic_recommendations', function(req, res) {
 
   //Gets a user's top tracks from Spotify's API
   function getTopTrack(artistID, topTrackDict, topTrackPromises) {
-
+    
     var options = {
       url: 'https://api.spotify.com/v1/artists/'+artistID+'/top-tracks?country=US',
       headers: { 'Authorization': 'Bearer ' + access_token },
