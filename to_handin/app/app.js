@@ -191,16 +191,18 @@ app.get('/get_hipster_score', function(req, res) {
       //Spotify's getSeveralTracks endpoint cuts down the number of calls you have to make
       ids = ids.slice(0,ids.length-1);
       var url = 'https://api.spotify.com/v1/artists?ids='+ids;
-      console.log("url: " + url);
+      //console.log("url: " + url);
       options['url'] = url
       //calls getSeveralTracks
       var ArtistPromise = get(options);
       //returns a promise for each call made
       ArtistPromises.push(ArtistPromise.then(function (result) {
-        promises += 1
         //Keeps track of genres of tracks and artist popularities
         for (artistidx in result.artists) {
+
+
           var artist = result.artists[artistidx];
+          console.log("artist: " + artist);
           artistPopularityDict[artist.name] = artist.popularity
           trackArtistCountList[userID] += 1;
           //iterates all the genres of each artist and adds the mto a dictionary
@@ -299,7 +301,6 @@ app.get('/get_hipster_score', function(req, res) {
     //wait for all track promises to resolve
     Promise.all(TrackPromises).then(function(arrayOfResults) {
       console.log("got all tracks");
-      console.log(trackArtistList)
       setTimeout(getAllArtists(userID), 5000);
     });
 
