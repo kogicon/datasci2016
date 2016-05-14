@@ -1,11 +1,4 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Authorization Code oAuth2 flow to authenticate against
- * the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
- */
+//This is the main of our app. To run it, type node app.js in terminal and go to localhost:8888
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
@@ -48,11 +41,13 @@ var get = function(options) {
   return new Promise(function(resolve, reject) {
     var req = request.get(options, function(error, response, body) {
 
-
+      //if there was a response at all
       if (response) {
+        //if the response was successful
         if (response.statusCode == 200) {
           resolve(body);
         } else {
+          //there was an error in making a call to the SPI
           rejcount++;
           console.log("status code: " + response.statusCode);
           console.log("REJECTING" + rejcount);
@@ -60,13 +55,13 @@ var get = function(options) {
           resolve({});
           //reject(Error(response.statusText));
         }
-      } else {
+      }
+      //there was no response at all 
+      else {
         console.log(">>>>>>> SUPER REJECTING");
         resolve({});
         //reject(Error("response not found"));
       }
-
-
     });
   });
 }
@@ -153,7 +148,7 @@ app.get('/get_hipster_score', function(req, res) {
 
   var access_token = req.query.access_token;
 
-
+  //data structures
   allTracksList = {};
   trackScoreList = {};
   trackGenreDict = {};
@@ -165,7 +160,6 @@ app.get('/get_hipster_score', function(req, res) {
 
   //Gets all of a users artists from the tracks from their playlists
   function getAllArtists(userID) {
-
 
     var options = {
       url: 'https://api.spotify.com/v1/me/artist',
@@ -185,10 +179,8 @@ app.get('/get_hipster_score', function(req, res) {
       else {
         upperBound = trackArtistList[userID].length;
       }
-      //console.log("upperbound: " + upperBound);
+      //no more tracks to get
       for (var j = index; j < upperBound; j++) {
-        //console.log("j: " + j)
-
         if (j > trackArtistList[userID].length) {
           console.log("breaking");
           break;
@@ -201,19 +193,17 @@ app.get('/get_hipster_score', function(req, res) {
       var url = 'https://api.spotify.com/v1/artists?ids='+ids;
       console.log("url: " + url);
       options['url'] = url
-
+      //calls getSeveralTracks
       var ArtistPromise = get(options);
-      count = 0
-      promises = 0
+      //returns a promise for each call made
       ArtistPromises.push(ArtistPromise.then(function (result) {
         promises += 1
         //Keeps track of genres of tracks and artist popularities
         for (artistidx in result.artists) {
-          count += 1
           var artist = result.artists[artistidx];
-          console.log(artist.name);
           artistPopularityDict[artist.name] = artist.popularity
           trackArtistCountList[userID] += 1;
+          //iterates all the genres of each artist and adds the mto a dictionary
           for (index in artist.genres) {
             var genre = artist.genres[index];
             if (!(genre in trackGenreDict[userID])) {
@@ -221,13 +211,14 @@ app.get('/get_hipster_score', function(req, res) {
             }
             trackGenreDict[userID][genre] += 1;
           }
+          //artist has no genres
           if (artist.genres.length == 0) {
             trackSepCountList[userID] += 1;
           }      
         }
       }));
     }
-
+    //waits for all the artist promises to resolve (because JavaScript is asynchronous)
     Promise.all(ArtistPromises).then(function(arrayOfResults) {
       console.log("got all artists");
       var sortable = [];
