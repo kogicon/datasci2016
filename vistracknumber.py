@@ -57,17 +57,17 @@ def tTest(samp_mean, samp_stdev, num_samp, exp_mean):
 
 
 #Loads the dictionary of albums to tracks from json using the specfied filepath
-albumfilepath = "bigalbumtotracks.txt"
+albumfilepath = "final_data/bigalbumtotracks.txt"
 with open(albumfilepath) as fileobj:
     data = simplejson.load(fileobj)
 
 #Loads the dictionary of artists to albums (by id) from json using the specfied filepath
-a2afilepath = "bigartisttoalbum.txt"
+a2afilepath = "final_data/bigartisttoalbum.txt"
 with open(a2afilepath) as fileobj:
     a2adata = simplejson.load(fileobj)
 
 #Loads the dictionary of artists to popularity (by id) from json using the specfied filepath
-a2popfilepath = "bigartisttopopularity.txt"
+a2popfilepath = "final_data/bigartisttopopularity.txt"
 with open(a2popfilepath) as fileobj:
     a2popdata = simplejson.load(fileobj)
 
@@ -101,7 +101,7 @@ for j in artistdata:
     #(to only visualize data from super popular artists (90+) or not as popular ones)
     #if artistdata[i]['pop'] >= 101 or artistdata[i]['pop'] < 90:
     #    continue
-    album = artistdata[j]['tracks']
+    album = normalizeAlbum(artistdata[j]['tracks'])
     for i in range(len(album)):
         if i == len(track_pop):
             track_pop.append(0)
@@ -122,6 +122,11 @@ print "Track num", np.mean(all_track_num), np.std(all_track_num)
 print "Track pop", np.mean(all_track_pop), np.std(all_track_pop)
 
 
+
+
+
+##### Creates scatterplot for track numbers vs popularity w/ regression line
+
 #Initializes datapoint lists for visualization
 x = []
 y = []
@@ -135,7 +140,6 @@ for i in range(len(track_group)):
         x.append(i+1)
         y.append(val)
 
-
 #Uses scipy.stats to get a regression line, providing the following information
 #slope - the slope of the regression line
 #intercept - the intercept of the regression line
@@ -145,10 +149,12 @@ for i in range(len(track_group)):
 slope, intercept, rval, pval, stderr = stats.linregress(x, y)
 print "Slope:", slope
 print "intercept:", intercept
-print "Rval:",rval
 print "r-squared:", rval**2
 print "Pval:",pval
 print "Stderr:",stderr
+
+#Prints the number of tracks to be displayed
+print "numtracks:", len(x)
 
 #Creates a set of points to visualize the line in the plot
 #(Taken from the scipy linregress example)
@@ -156,53 +162,45 @@ fit = []
 for i in range(len(x)):
     fit.append(slope*x[i] + intercept)
 
-
-meany = sum(y)/float(len(y))
-
-SStot = 0
-SSres = 0
-for i in range(len(y)):
-    SStot += (y[i] - meany)**2
-    SSres += (y[i] - fit[i])**2
-
-r2 = 1 - SSres/float(SStot)
-
-print r2, SSres, SStot, meany
-print "numtracks!", len(x)
-
+#Label axes of plot for scatterplot (Should be changed manually if tesing different part of dataset)
 ax = plt.figure().add_subplot(111)
-
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
 ax.set_title('Track # vs. Track Popularity w/ Regression Line')
 
-#
+
+
+
+
+
+##### Creates barchart from data
+
+#Plots scatterplot of all datapoints 
 m = range(1,21)
 plt.scatter(x, y, s=10, alpha=0.1)
 plt.plot(x, fit, '-')
 plt.axes().set_xticks(map(lambda n: n, m))
 plt.show()
 
-'''
+#Get mean of StDevs away from mean for each track position and print them
 for i in range(len(track_pop)):
     track_pop[i] = track_pop[i]/float(track_count[i])
     print i, track_pop[i], track_count[i]
 
-
+#Label axes of plot for barchart (Should be changed manually if tesing different part of dataset)
 ax = plt.figure().add_subplot(111)
-
 ax.set_xlabel('Track #')
 ax.set_ylabel('Popularity of Track (STDEVs from mean)')
-ax.set_title('Track # vs. Track Popularity for Spotify Artists w/ Pop')
+ax.set_title('Track # vs. Track Popularity for Spotify Artists')
 
-
+#Set up tick marks and bar widths
 x = range(len(track_pop))
 width = 1/1.5
 
-
+#Plot barchart with adjusted ticks to show track numbers
 plt.bar(x, track_pop, width, color="blue")
 plt.axes().set_xticks(map(lambda n: n, x))
 plt.axes().set_xticklabels(map(lambda n: str(n+1), x))
 plt.show()
 
-'''
+

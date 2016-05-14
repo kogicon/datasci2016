@@ -34,7 +34,7 @@ def correlation(n, sum_x, sum_y, sum_xx, sum_yy, sum_xy):
 
 
 #Filepath 
-userfilepath = "newuserwgenres.txt"
+userfilepath = "final_data/newuserwgenres.txt"
 
 #Loads file into "data" from json
 with open(userfilepath) as fileobj:
@@ -140,8 +140,8 @@ ax = plt.figure().add_subplot(111)
 
 #Sets labels for graph (should be manually edited when visualizing different part of the dataset)
 ax.set_xlabel('Hipster Score')
-ax.set_ylabel('# of Genres & Ungenred Artists Listened to by User')
-ax.set_title('# of Genres w/ Ungenred Artists vs. Hipster Score for All Sampled Users')
+ax.set_ylabel('# of Genres / # of Artists Listened to by User')
+ax.set_title('# of Genres / # of Artists vs. Hipster Score for All Sampled Users')
 
 #Displays a scatterplot of the datapoint sets, using the colors list to determine colors of points
 plt.scatter(x, y, s=50, c=colors, alpha=0.5)
