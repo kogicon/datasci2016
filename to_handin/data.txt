@@ -1,6 +1,9 @@
 Music-centric hypothesis:
+
 bigalbumtotracks.txt - didctionary that maps album to tracks with their track numbers and popularities
 bigartisttoalbum.txt - dictionary that makes artists to albums
 bigartisttopopularity.txt - dictionary that maps artists to their popularities
+
+User-centric hypothesis:
 newuserwgenres.txt - dictionary that maps users to their hipster scores and genre counts
 userpopgenre.txt - dictionary that mapsusers to their hipster score, # genres, # ungenred artists, # artists listened to 
