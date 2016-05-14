@@ -96,11 +96,13 @@ Aquires Login tokens from spotify and gets data
             'access_token': access_token
           }
         }).done(function(data) {
-
+          // Have recommended artists title appear
           $('#rec-artists-title').show();
 
+          // Get information on the user's top artists
           top_artists_info = data.artists;
 
+          // Create a separate list of just top artist *names*
           var top_artists = []
           for (var i = 0; i < top_artists_info.length; i++) {
             var name = top_artists_info[i].name;
@@ -123,6 +125,7 @@ Aquires Login tokens from spotify and gets data
           h2tag.appendChild(t);
           recArtistPlaceholder.appendChild(h2tag);
 
+          // Get images for each artist
           for (var i = 0; i < rec_artists.length; i++) {
             var artist = rec_artists[i];
             var track = toptrackdict[artist.id];
@@ -134,6 +137,7 @@ Aquires Login tokens from spotify and gets data
 
             audioTracks[artist.id] = track.preview_url;
 
+            // Find related artists for each recommended artist
             related = "";
             for (index in recommending[artist.id]) {
               for (artidx in top_artists_info) {
@@ -153,6 +157,8 @@ Aquires Login tokens from spotify and gets data
 
           console.log(recommending);
 
+          // Visualization Code
+
           var dim = 1500;
 
           var pack = d3.layout.pack()
@@ -161,6 +167,7 @@ Aquires Login tokens from spotify and gets data
 
           $("#artist-viz").html("");
 
+          // Add the SVG
           var svg = d3.select("#artist-viz").append("svg")
           .attr("width", dim)
           .attr("height", dim / 3);
@@ -197,7 +204,7 @@ Aquires Login tokens from spotify and gets data
           .attr("x", 0)
           .attr("y", 0);
 
-
+          // Display recommended artist circles
           for (var i = 0; i < rec_artists.length; i++) {
             var artist = rec_artists[i];
             var track = toptrackdict[artist.id];
@@ -281,7 +288,7 @@ if (to_split.substring(0, 22) == "Original Broadway Cast")
 
 var split_name = to_split.split(" ");
 
-
+// Display recommended artist names
 for (var k = 0; k < split_name.length; k++) {
   svg.append("text")
   .attr("x", (i + 1) * 250)
@@ -295,6 +302,7 @@ for (var k = 0; k < split_name.length; k++) {
 }
 }
 
+// Showing top artists in visualization
 var pos_index = 0;
 var found = false;
 for (var i = 0; i < top_artists_info.length; i++) {
@@ -307,7 +315,7 @@ for (var i = 0; i < top_artists_info.length; i++) {
     for (var j = 0; j < recommending[recid].length; j++){
       
       if (recommending[recid][j].id == top_artist.id) {
-
+        // Create a circle for each top artist related to a recommended artist
         var circ = svg.append("circle")
         .attr("r", 50)
         .attr("cx", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 55))
@@ -322,6 +330,7 @@ for (var i = 0; i < top_artists_info.length; i++) {
 
         var split_name = to_split.split(" ");
 
+        // Add artist name to circle
         for (var k = 0; k < split_name.length; k++) {
           svg.append("text")
           .attr("x", dim/2 + (((pos_index %2)*2 -1) * (Math.floor((pos_index+1)/2) * 2) * 55))
@@ -340,6 +349,8 @@ for (var i = 0; i < top_artists_info.length; i++) {
     }
   }
 }
+
+// Draw lines between related nodes of the visualization
 for (var key in recommending) {
   for (var i = 0; i < rec_artists.length; i++) {
     if (key == rec_artists[i].id) {
