@@ -246,6 +246,7 @@ app.get('/get_hipster_score', function(req, res) {
       //finalScoreList[userID] = [total, trackGenreDict[userID], trackSepCountList[userID], trackArtistCountList[userID]];
       //console.log("finalScoreList");
       //console.log(finalScoreList);
+      
       //send the information to the front end, since node.js is backend
       res.send({
         'score': total,
